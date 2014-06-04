@@ -1,0 +1,10 @@
+.project
+.classpath
+.settings
+.idea
+*.iml
+target
+project/target
+lib_managed
+artifacts
+
