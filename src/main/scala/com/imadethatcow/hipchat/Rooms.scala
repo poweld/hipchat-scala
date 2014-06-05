@@ -30,7 +30,6 @@ class Rooms(private[this] val apiToken: String) {
       case None => None
     }
   }
-  def call: Option[Seq[Room]] = call()
 }
 
 object Rooms {

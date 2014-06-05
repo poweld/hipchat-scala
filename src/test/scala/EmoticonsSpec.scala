@@ -15,7 +15,7 @@ class EmoticonsSpec extends FlatSpec {
     val emoticons = new Emoticons(apiToken)
 
     "Emoticons request" should "return a valid JSON response" in {
-      for (seq <- emoticons.call; emoticon <- seq) {
+      for (seq <- emoticons.call(); emoticon <- seq) {
         println(emoticon)
       }
     }

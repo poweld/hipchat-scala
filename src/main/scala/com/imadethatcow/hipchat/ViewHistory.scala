@@ -8,13 +8,13 @@ import com.imadethatcow.hipchat.caseclass.{HistoryItem, HistoriesResponse}
 
 class ViewHistory(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)
-  def call(idOrName: Any,
+  def call(roomIdOrName: Any,
            date: Option[Any] = None, // Must be either "recent" or conform to ISO-8601, use joda for the latter
            timezone: Option[String] = None,
            startIndex: Option[Long] = None,
            maxResults: Option[Long] = None,
            reverse: Option[Boolean] = None): Option[Seq[HistoryItem]] = {
-    var req = addToken(ViewHistory.url(idOrName), apiToken)
+    var req = addToken(ViewHistory.url(roomIdOrName), apiToken)
     for (d <- date) req = req.addQueryParameter("date", d.toString)
     for (tz <- timezone) req = req.addQueryParameter("timezone", tz)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
@@ -38,10 +38,10 @@ class ViewHistory(private[this] val apiToken: String) {
 }
 
 object ViewHistory {
-  def url(idOrName: Any) = {
-    idOrName match {
+  def url(roomIdOrName: Any) = {
+    roomIdOrName match {
       case _: String | _: Long =>
-        (apiUrl / "room" / idOrName.toString / "history").GET
+        (apiUrl / "room" / roomIdOrName.toString / "history").GET
     }
   }
 }

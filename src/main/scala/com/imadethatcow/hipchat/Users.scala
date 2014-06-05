@@ -32,7 +32,6 @@ class Users(private[this] val apiToken: String) {
       case None => None
     }
   }
-  def call: Option[Seq[User]] = call()
 }
 
 object Users {

@@ -16,7 +16,7 @@ class UsersSpec extends FlatSpec {
     val users = new Users(apiToken)
 
     "Users request" should "return a valid JSON response" in {
-      for (seq <- users.call; user <- seq) {
+      for (seq <- users.call(); user <- seq) {
         println(user)
       }
     }

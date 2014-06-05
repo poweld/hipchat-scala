@@ -30,7 +30,6 @@ class Emoticons(private[this] val apiToken: String) {
       case None => None
     }
   }
-  def call: Option[Seq[Emoticon]] = call()
 }
 
 object Emoticons {

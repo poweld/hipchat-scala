@@ -16,7 +16,7 @@ class RoomsSpec extends FlatSpec {
     val rooms = new Rooms(apiToken)
 
     "Rooms request" should "return a valid JSON response" in {
-      for (seq <- rooms.call; room <- seq) {
+      for (seq <- rooms.call(); room <- seq) {
         println(room)
       }
     }

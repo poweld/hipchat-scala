@@ -16,14 +16,14 @@ import com.imadethatcow.hipchat.caseclass.WebhookSimple
 
 class Webhooks(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)
-  def create(idOrName: Any,
+  def create(roomIdOrName: Any,
              url: String,
              event: WebhookEvent,
              pattern: Option[String] = None,
              name: Option[String] = None): Option[WebhookCreateResponse] = {
     val webhook = WebhookCreateRequest(url, event.toString, pattern, name)
     val body = mapper.writeValueAsString(webhook)
-    val req = addToken(Webhooks.urlPost(idOrName), apiToken)
+    val req = addToken(Webhooks.urlPost(roomIdOrName), apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
