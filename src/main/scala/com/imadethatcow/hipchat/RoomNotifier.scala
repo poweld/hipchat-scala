@@ -32,7 +32,7 @@ object RoomNotifier {
   def url(roomIdOrName: Any) = {
     roomIdOrName match {
       case _: String | _: Long =>
-        (apiUrl / "room" / roomIdOrName.toString / "notification").POST
+        (apiUrlSecure / "room" / roomIdOrName.toString / "notification").POST
     }
   }
 }

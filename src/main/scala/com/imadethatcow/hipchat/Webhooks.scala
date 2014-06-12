@@ -106,7 +106,7 @@ object Webhooks {
   def urlBase(roomIdOrName: Any) = {
     roomIdOrName match {
       case _: String | _: Long =>
-        apiUrl / "room" / roomIdOrName.toString / "webhook"
+        apiUrlSecure / "room" / roomIdOrName.toString / "webhook"
     }
   }
   def urlPost(roomIdOrName: Any) = urlBase(roomIdOrName).POST

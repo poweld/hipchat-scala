@@ -33,7 +33,7 @@ class Rooms(private[this] val apiToken: String) {
 }
 
 object Rooms {
-  val url = (apiUrl / "room").GET
+  val url = (apiUrlSecure / "room").GET
 }
 
 

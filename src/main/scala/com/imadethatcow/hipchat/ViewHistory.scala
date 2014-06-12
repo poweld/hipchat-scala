@@ -41,7 +41,7 @@ object ViewHistory {
   def url(roomIdOrName: Any) = {
     roomIdOrName match {
       case _: String | _: Long =>
-        (apiUrl / "room" / roomIdOrName.toString / "history").GET
+        (apiUrlSecure / "room" / roomIdOrName.toString / "history").GET
     }
   }
 }

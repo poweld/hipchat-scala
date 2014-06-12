@@ -20,7 +20,7 @@ class PrivateMessenger(private[this] val apiToken: String) {
 }
 
 object PrivateMessenger {
-  def url(idOrEmail: String) = (apiUrl / "user" / idOrEmail / "message").POST
+  def url(idOrEmail: String) = (apiUrlSecure / "user" / idOrEmail / "message").POST
 }
 
 

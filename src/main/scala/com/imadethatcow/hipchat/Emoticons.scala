@@ -33,7 +33,7 @@ class Emoticons(private[this] val apiToken: String) {
 }
 
 object Emoticons {
-  val url = (apiUrl / "emoticon").GET
+  val url = (apiUrlSecure / "emoticon").GET
 }
 
 
