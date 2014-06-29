@@ -1,6 +1,7 @@
 package com.imadethatcow.hipchat
 
 import Common._
+import com.imadethatcow.hipchat.enums.Color
 import dispatch._, Defaults._
 import org.slf4j.LoggerFactory
 import com.imadethatcow.hipchat.caseclass.RoomNotification
