@@ -3,7 +3,7 @@ hipchat-scala
 
 Scala interface for the HipChat v2 API
 
-This documention sucks
+This documentation sucks
 ----------------------
 At least for now. Please check [https://www.hipchat.com/docs/apiv2] to get a better sense for available capabilities.
 
@@ -20,6 +20,28 @@ TODO
 * Auth
 * Room attributes retrieval (members, topic, etc)
 * ISO-8601 date support in ViewHistory
+
+Implemented Methods
+===================
+
+Emoticons
+---------
+* Get all emoticons
+
+Rooms
+-----
+* Get all rooms
+* Send room notification
+* Create webhook
+* Get all webhooks
+* Delete webhook
+* Get webhook
+* View history
+
+User
+----
+* Private message user
+* Get all users
 
 Unimplemented Methods
 =====================
@@ -64,27 +86,5 @@ User
 * Delete user
 * View user
 * Create user
-
-Implemented Methods
-===================
-
-Emoticons
----------
-* Get all emoticons
-
-Rooms
------
-* Get all rooms
-* Send room notification
-* Create webhook
-* Get all webhooks
-* Delete webhook
-* Get webhook
-* View history
-
-User
-----
-* Private message user
-* Get all users
 
 Feel free to contact me with feature requests, comments, or bugs
