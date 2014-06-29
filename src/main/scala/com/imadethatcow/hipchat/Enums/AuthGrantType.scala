@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.enums
 
 object AuthGrantType extends Enumeration {
   type AuthGrantType = Value

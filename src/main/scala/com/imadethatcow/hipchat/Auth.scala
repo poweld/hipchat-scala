@@ -1,6 +1,7 @@
 package com.imadethatcow.hipchat
 
 import Common._
+import com.imadethatcow.hipchat.enums.AuthGrantType
 import dispatch._, Defaults._
 import org.slf4j.LoggerFactory
 import scala.util.{Failure, Success, Try}
@@ -8,7 +9,7 @@ import com.imadethatcow.hipchat.caseclass._
 import scala.util.Failure
 import scala.Some
 import scala.util.Success
-import com.imadethatcow.hipchat.AuthGrantType.AuthGrantType
+import AuthGrantType.AuthGrantType
 
 // TODO: this isn't complete, shouldn't be used
 private class Auth(private[this] val apiToken: String) {

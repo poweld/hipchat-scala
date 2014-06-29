@@ -21,4 +21,70 @@ TODO
 * Room attributes retrieval (members, topic, etc)
 * ISO-8601 date support in ViewHistory
 
+Unimplemented Methods
+=====================
+
+Add Ons
+-------
+* Get addon installable data
+
+Capabilities
+------------
+* Get capabilities
+
+Emoticons
+---------
+* Get single emoticon
+
+OAuth Sessions
+--------------
+* Oath delete session
+* Oath get session
+* Generate Token
+
+Rooms
+-----
+* Create room
+* Send room notification redirect
+* Update room
+* Get room
+* Delete room
+* Get room statistics
+* Get all members
+* Set topic
+* Add member
+* Remove member
+* Invite user
+
+User
+----
+* Update photo
+* Delete photo
+* Update user
+* Delete user
+* View user
+* Create user
+
+Implemented Methods
+===================
+
+Emoticons
+---------
+* Get all emoticons
+
+Rooms
+-----
+* Get all rooms
+* Send room notification
+* Create webhook
+* Get all webhooks
+* Delete webhook
+* Get webhook
+* View history
+
+User
+----
+* Private message user
+* Get all users
+
 Feel free to contact me with feature requests, comments, or bugs
