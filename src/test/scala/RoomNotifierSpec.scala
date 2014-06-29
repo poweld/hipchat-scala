@@ -1,3 +1,4 @@
+import com.imadethatcow.hipchat.enums.Color
 import com.imadethatcow.hipchat._
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
