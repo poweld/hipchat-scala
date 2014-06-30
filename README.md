@@ -30,7 +30,7 @@ Emoticons
 
 Rooms
 -----
-* Get all rooms
+* Get all rooms (**Rooms**)
 * Send room notification
 * Create webhook
 * Get all webhooks
@@ -86,5 +86,7 @@ User
 * Delete user
 * View user
 * Create user
+
+
 
 Feel free to contact me with feature requests, comments, or bugs

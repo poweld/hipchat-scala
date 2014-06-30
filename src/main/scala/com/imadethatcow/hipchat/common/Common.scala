@@ -1,9 +1,10 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.common
 
-import dispatch._, Defaults._
-import com.fasterxml.jackson.module.scala._
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.annotation.JsonInclude.Include
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala._
+import dispatch.Defaults._
+import dispatch._
 import org.slf4j.LoggerFactory
 
 object Common {

@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class Room(id: Long, name: String)
 case class RoomsItem(id: Long, links: RoomsItemLinks, name: String)

@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class Emoticon(url: String, id: Long, shortcut: String)
 case class EmoticonsLinks(self: String, prev: String, next: String)

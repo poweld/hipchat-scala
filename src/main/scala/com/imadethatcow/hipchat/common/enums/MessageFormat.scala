@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.common.enums
 
 object MessageFormat extends Enumeration {
   type MessageFormat = Value

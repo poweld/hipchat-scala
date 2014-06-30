@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class HistoriesLinks(self: String, prev: String = "", next: String = "")
 case class HistoriesResponse(items: Seq[HistoryItem], startIndex: Long, maxResults: Long, links: HistoriesLinks)

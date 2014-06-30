@@ -1,6 +1,6 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
-import com.imadethatcow.hipchat.enums.AuthGrantType
+import com.imadethatcow.hipchat.common.enums.AuthGrantType
 import AuthGrantType.AuthGrantType
 
 case class AuthRequest(grant_type: AuthGrantType,

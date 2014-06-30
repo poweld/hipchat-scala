@@ -1,9 +1,9 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.users
 
+import com.imadethatcow.hipchat.common.Common
 import Common._
-import dispatch._, Defaults._
+import com.imadethatcow.hipchat.common.caseclass.PrivateMessage
 import org.slf4j.LoggerFactory
-import com.imadethatcow.hipchat.caseclass.PrivateMessage
 
 class PrivateMessenger(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)

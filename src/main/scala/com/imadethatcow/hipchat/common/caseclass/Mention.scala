@@ -1,3 +1,3 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class Mention(id: Long, mention_name: String, name: String)

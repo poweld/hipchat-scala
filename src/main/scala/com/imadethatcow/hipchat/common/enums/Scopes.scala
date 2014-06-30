@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.enums
+package com.imadethatcow.hipchat.common.enums
 
 object Scopes extends Enumeration {
   type Scopes = Value

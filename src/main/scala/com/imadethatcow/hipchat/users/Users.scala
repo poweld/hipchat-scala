@@ -1,10 +1,10 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.users
 
-import Common._
-import dispatch._, Defaults._
-import scala.util.{Failure, Success, Try}
+import com.imadethatcow.hipchat.common.Common._
+import com.imadethatcow.hipchat.common.caseclass.{User, UsersResponse}
 import org.slf4j.LoggerFactory
-import com.imadethatcow.hipchat.caseclass.{User, UsersResponse}
+
+import scala.util.{Failure, Success, Try}
 
 class Users(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)

@@ -1,5 +1,6 @@
-import com.imadethatcow.hipchat.enums.Color
+import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
 import com.imadethatcow.hipchat._
+import com.imadethatcow.hipchat.rooms.RoomNotifier
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
 import scala.util.Try

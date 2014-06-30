@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class Webhook(room: Option[RoomsItem], url: String, pattern: Option[String], event: String, name: String, id: Long, creator: Option[UsersItem])
 case class WebhookSimple(url: String, pattern: Option[String], event: String, name: String, id: Long)

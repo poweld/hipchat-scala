@@ -1,10 +1,11 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.rooms
 
+import com.imadethatcow.hipchat.common.Common
 import Common._
-import dispatch._, Defaults._
-import scala.util.{Failure, Success, Try}
+import com.imadethatcow.hipchat.common.caseclass.{HistoriesResponse, HistoryItem}
 import org.slf4j.LoggerFactory
-import com.imadethatcow.hipchat.caseclass.{HistoryItem, HistoriesResponse}
+
+import scala.util.{Failure, Success, Try}
 
 class ViewHistory(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)

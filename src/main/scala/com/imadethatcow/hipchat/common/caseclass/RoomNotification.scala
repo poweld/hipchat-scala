@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class RoomNotification(color: String,
                             message: String,

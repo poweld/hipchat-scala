@@ -1,14 +1,14 @@
 package com.imadethatcow.hipchat
 
-import Common._
-import dispatch._, Defaults._
-import scala.util.{Failure, Success, Try}
+import com.imadethatcow.hipchat.common.Common._
+import com.imadethatcow.hipchat.common.caseclass.{Emoticon, EmoticonsResponse}
 import org.slf4j.LoggerFactory
-import com.imadethatcow.hipchat.caseclass.{EmoticonsResponse, Emoticon}
+
+import scala.util.{Failure, Success, Try}
 
 class Emoticons(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)
-  def call(startIndex: Option[Long] = None,
+  def getAll(startIndex: Option[Long] = None,
            maxResults: Option[Long] = None,
            `type`: Option[Boolean] = None): Option[Seq[Emoticon]] = {
     var req = addToken(Emoticons.url, apiToken)
@@ -30,6 +30,8 @@ class Emoticons(private[this] val apiToken: String) {
       case None => None
     }
   }
+
+  def get(emoticonIdOrKey: Any)= ???
 }
 
 object Emoticons {

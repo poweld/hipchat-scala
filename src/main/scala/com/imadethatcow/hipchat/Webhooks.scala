@@ -1,18 +1,20 @@
 package com.imadethatcow.hipchat
 
+import com.imadethatcow.hipchat.common.Common
 import Common._
+import com.imadethatcow.hipchat.common.enums.WebhookEvent
 import dispatch._, Defaults._
 import org.slf4j.LoggerFactory
 import WebhookEvent._
 import scala.util.{Failure, Success, Try}
-import com.imadethatcow.hipchat.caseclass._
-import com.imadethatcow.hipchat.caseclass.WebhookCreateResponse
+import com.imadethatcow.hipchat.common.caseclass._
+import com.imadethatcow.hipchat.common.caseclass.WebhookCreateResponse
 import scala.util.Failure
 import scala.Some
-import com.imadethatcow.hipchat.caseclass.WebhookCreateRequest
-import com.imadethatcow.hipchat.caseclass.WebhookGetItems
+import com.imadethatcow.hipchat.common.caseclass.WebhookCreateRequest
+import com.imadethatcow.hipchat.common.caseclass.WebhookGetItems
 import scala.util.Success
-import com.imadethatcow.hipchat.caseclass.WebhookSimple
+import com.imadethatcow.hipchat.common.caseclass.WebhookSimple
 
 class Webhooks(private[this] val apiToken: String) {
   val log = LoggerFactory.getLogger(getClass)

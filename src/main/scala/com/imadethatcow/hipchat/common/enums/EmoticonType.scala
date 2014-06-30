@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.enums
+package com.imadethatcow.hipchat.common.enums
 
 object EmoticonType extends Enumeration {
   type EmoticonType = Value

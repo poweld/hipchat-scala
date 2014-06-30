@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.caseclass
+package com.imadethatcow.hipchat.common.caseclass
 
 case class User(mention_name: String, id: Long, name: String)
 case class UsersItem(mention_name: String, id: Long, links: UsersItemLinks, name: String)

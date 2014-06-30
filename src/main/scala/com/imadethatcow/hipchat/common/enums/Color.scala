@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat.enums
+package com.imadethatcow.hipchat.common.enums
 
 object Color extends Enumeration {
   type Color = Value

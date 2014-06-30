@@ -1,4 +1,4 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.common.enums
 
 object WebhookEvent extends Enumeration {
   type WebhookEvent = Value

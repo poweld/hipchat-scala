@@ -1,13 +1,14 @@
-package com.imadethatcow.hipchat
+package com.imadethatcow.hipchat.rooms
 
+import com.imadethatcow.hipchat.common.Common
 import Common._
-import com.imadethatcow.hipchat.enums.Color
-import dispatch._, Defaults._
+import com.imadethatcow.hipchat.common.caseclass.RoomNotification
+import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
 import org.slf4j.LoggerFactory
-import com.imadethatcow.hipchat.caseclass.RoomNotification
 
 class RoomNotifier(private[this] val apiToken: String) {
-  import Color._, MessageFormat._
+  import MessageFormat._
+  import com.imadethatcow.hipchat.common.enums.Color._
   val log = LoggerFactory.getLogger(getClass)
   def call(roomIdOrName: AnyRef,
            message: String,
