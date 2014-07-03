@@ -15,21 +15,21 @@ class EmoticonsSpec extends FlatSpec {
     val emoticons = new Emoticons(apiToken)
 
     "Emoticons request" should "return a valid JSON response" in {
-      for (seq <- emoticons.call(); emoticon <- seq) {
+      for (seq <- emoticons.getAll(); emoticon <- seq) {
         println(emoticon)
       }
     }
 
     it should "return a valid JSON response when specifying start-index" in {
-      emoticons.call(startIndex = Some(1L))
+      emoticons.getAll(startIndex = Some(1L))
     }
 
     it should "return a valid JSON response when specifying max-results" in {
-      emoticons.call(maxResults = Some(1L))
+      emoticons.getAll(maxResults = Some(1L))
     }
 
     it should "return a valid JSON response when specifying type" in {
-      emoticons.call(`type` = Some(true))
+      emoticons.getAll(`type` = Some(true))
     }
   }
 }

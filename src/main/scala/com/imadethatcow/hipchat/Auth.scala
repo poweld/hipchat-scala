@@ -1,41 +1,33 @@
 package com.imadethatcow.hipchat
 
 import com.imadethatcow.hipchat.common.Common._
-import com.imadethatcow.hipchat.common.caseclass._
-import com.imadethatcow.hipchat.common.enums.AuthGrantType.AuthGrantType
 import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success, Try}
+import com.imadethatcow.hipchat.common.caseclass.{AuthRequest, AuthResponse}
+import scala.util.Success
+import scala.util.Failure
+import scala.Some
+import com.imadethatcow.hipchat.common.enums.AuthGrantType
+import com.imadethatcow.hipchat.common.enums.Scopes._
 
-// TODO: this isn't complete, shouldn't be used
-private class Auth(private[this] val apiToken: String) {
+class Auth(private[this] val apiToken: String) {
+
   val log = LoggerFactory.getLogger(getClass)
-  def call(grantType: AuthGrantType,
-           username: Option[String] = None,
-           code: Option[String] = None,
-           redirectUrl: Option[String] = None,
-           scope: Option[String] = None,
-           password: Option[String] = None,
-           refreshToken: Option[String] = None): Option[AuthResponse] = {
-    //val body = mapper.writeValueAsString(authRequest)
-    var req = addToken(Auth.urlPost, apiToken)
-      .addQueryParameter("grant_type", grantType.toString)
-      //.setBody(body)
-      //.setHeader("Content-Type", "application/json")
-      //.setHeader("Content-Type", "x-www-form-urlencoded")
+  def generatePersonalToken() = {
 
-    for (u <- username) req = req.addQueryParameter("username", u)
-    for (c <- code) req = req.addQueryParameter("code", c)
-    for (ru <- redirectUrl) req = req.addQueryParameter("redirect_url", ru)
-    for (s <- scope) req = req.addQueryParameter("scope", s)
-    for (p <- password) req = req.addQueryParameter("password", p)
-    for (rt <- refreshToken) req = req.addQueryParameter("refresh_token", rt)
-    println(req.toRequest.getUrl)
+    val req = addToken(Auth.urlPost, apiToken)
+      .setHeader("Content-Type", "application/x-www-form-urlencoded")
 
-    val jsonOpt = resolveRequest(req)
+    val urlEncodedVals = Seq(("grant_type", AuthGrantType.personal.toString))
+
+    val reqWithBody = addFormUrlEncodedVals(req, urlEncodedVals:_*)
+
+    val jsonOpt = resolveRequest(reqWithBody)
+
     jsonOpt match {
       case Some(json) =>
-        val authResponse = Try[AuthResponse](mapper.readValue(json, classOf[AuthResponse]))
+        val authResponse = Try(mapper.readValue(json, classOf[AuthResponse]))
         authResponse match {
           case Success(v) =>
             Some(v)

@@ -19,6 +19,13 @@ object Common {
   val version = "v2"
   val apiUrl = url(apiRoot) / version
   val apiUrlSecure = url(apiRootSecure) / version
+  def addFormUrlEncodedVals(req: Req, vals: (String,String)*) = {
+    val body: String = vals.foldLeft("") {
+      case (current, (left, right)) =>
+        current + "&" + left + "=" + right
+    }
+    req.setBody(body)
+  }
   def addToken(req: Req, token: String) = req.addQueryParameter("auth_token", token.toString)
   def resolveRequest(req: Req, expectedResponseCode: Int = 200) = {
     //http(req OK as.String).option.apply()
