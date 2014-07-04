@@ -3,9 +3,7 @@ hipchat-scala
 
 Scala interface for the HipChat v2 API
 
-This documentation sucks
-----------------------
-At least for now. Please check [https://www.hipchat.com/docs/apiv2] to get a better sense for available capabilities.
+Please check [https://www.hipchat.com/docs/apiv2] to get a better sense for available capabilities.
 
 Currently available capabilities and their (associated class):
 * Emoticon retrieval (**Emoticons**)
@@ -17,8 +15,6 @@ Currently available capabilities and their (associated class):
 
 TODO
 ----
-* Auth
-* Room attributes retrieval (members, topic, etc)
 * ISO-8601 date support in ViewHistory
 
 Implemented Methods
