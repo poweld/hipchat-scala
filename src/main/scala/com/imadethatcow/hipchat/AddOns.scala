@@ -5,10 +5,13 @@ import org.slf4j.LoggerFactory
 
 class AddOns() {
   def call(addonIdOrKey: Any,
-           apiToken: String) = {
+           apiToken: String) = ???
+  // TODO
+  /* {
     var req = addToken(AddOns.url(addonIdOrKey, apiToken), apiToken)
     req = req.addQueryParameter("addon_id_or_key", addonIdOrKey.toString)
   }
+  */
 }
 
 object AddOns {

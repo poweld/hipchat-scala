@@ -10,4 +10,10 @@ case class AuthRequest(grant_type: AuthGrantType,
                        scope: Option[String] = None,
                        password: Option[String] = None,
                        refresh_token: Option[String] = None)
-case class AuthResponse(access_token: String, expires_in: Long, group_name: String, token_type: String, scope: String, group_id: String)
+case class AuthResponse(access_token: String,
+                        expires_in: Long,
+                        group_name: String,
+                        token_type: String,
+                        scope: String,
+                        group_id: String,
+                        refresh_token: Option[String] = None)
