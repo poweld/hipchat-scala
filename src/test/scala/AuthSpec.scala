@@ -17,15 +17,14 @@ class AuthSpec extends FlatSpec with Matchers {
     val auth = new Auth(apiTokenTry.get)
 
     // this can work, but it is probably not good to test external API authentication
-
     /*
     "Auth create personal request" should "return a valid JSON response" in {
       for (authResponse <- auth.genPersonalToken()) {
         println(authResponse)
         authResponse.access_token should not equal apiTokenTry.get
       }
+    }
     */
-
     /*
     "Auth create personal request" should "return a valid JSON response" in {
       val usernameTry = Try(config.getString(USERNAME))
