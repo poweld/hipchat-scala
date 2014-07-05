@@ -17,21 +17,26 @@ class RoomsSpec extends FlatSpec {
     val rooms = new Rooms(apiToken)
 
     "Rooms request" should "return a valid JSON response" in {
-      for (seq <- rooms.call(); room <- seq) {
+      for (seq <- rooms.getAll(); room <- seq) {
         println(room)
       }
     }
 
     it should "return a valid JSON response when specifying start-index" in {
-      rooms.call(startIndex = Some(1L))
+      rooms.getAll(startIndex = Some(1L))
     }
 
     it should "return a valid JSON response when specifying max-results" in {
-      rooms.call(maxResults = Some(1L))
+      rooms.getAll(maxResults = Some(1L))
     }
 
     it should "return a valid JSON response when specifying include-archived" in {
-      rooms.call(includeArchived = Some(true))
+      rooms.getAll(includeArchived = Some(true))
+    }
+
+
+    "Room details request" should "Return a valid JSON response" in {
+      println(rooms.get(room))
     }
   }
 }

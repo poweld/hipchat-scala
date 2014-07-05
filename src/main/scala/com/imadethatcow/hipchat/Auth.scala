@@ -62,7 +62,7 @@ class Auth(private[this] val apiToken: String) {
 
 private object Auth {
   val log = LoggerFactory.getLogger(getClass)
-  val urlBase = apiUrlSecure / "oauth" / "token"
+  val urlBase = apiUrl / "oauth" / "token"
   val urlPost = urlBase.POST
 }
 

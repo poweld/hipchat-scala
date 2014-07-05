@@ -35,7 +35,7 @@ class Users(private[this] val apiToken: String) {
 }
 
 object Users {
-  val url = (apiUrlSecure / "user").GET
+  val url = (apiUrl / "user").GET
 }
 
 

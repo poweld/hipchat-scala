@@ -5,3 +5,12 @@ case class EmoticonsLinks(self: String, prev: String, next: String)
 case class EmoticonsItemLinks(self: String)
 case class EmoticonsItem(url: String, links: EmoticonsItemLinks, id: Long, shortcut: String)
 case class EmoticonsResponse(items: Seq[EmoticonsItem], startIndex: Long, maxResults: Long, links: EmoticonsLinks)
+
+case class EmoticonDetails(width: Int,
+                           audio_path: String,
+                           id: Long,
+                           shortcut: String,
+                           height: Int,
+                           creator: UsersItem,
+                           links: EmoticonsItemLinks,
+                           url: String)
