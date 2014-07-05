@@ -18,15 +18,12 @@ object Common {
   val apiRootSecure = "https://api.hipchat.com"
   val version = "v2"
   val apiUrlSecure = url(apiRootSecure) / version
-  def addFormUrlEncodedVals(req: Req, vals: (String,String)*): Req = {
-    @tailrec def loop(req: Req, vals: Seq[(String, String)]): Req = vals match {
-      case Nil => req
-      case head :: tail =>
-        val (name, value) = head
-        loop(req.addParameter(name, value), tail)
+
+  def addFormUrlEncodedVals(req: Req, vals: Seq[(String,String)]): Req =
+    vals.foldLeft(req) {
+      case (request, (name, value)) => request.addParameter(name, value)
     }
-    loop(req, vals)
-  }
+
   def addToken(req: Req, token: String): Req = req.addQueryParameter("auth_token", token.toString)
   def resolveRequest(req: Req, expectedResponseCode: Int = 200): Option[String] = {
     val response = http(req).option.apply()
