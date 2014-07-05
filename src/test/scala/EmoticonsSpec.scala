@@ -31,5 +31,9 @@ class EmoticonsSpec extends FlatSpec {
     it should "return a valid JSON response when specifying type" in {
       emoticons.getAll(`type` = Some(true))
     }
+
+    "Emoticon details request" should "return a valid JSON response" in {
+      println(emoticons.get("okay"))
+    }
   }
 }
