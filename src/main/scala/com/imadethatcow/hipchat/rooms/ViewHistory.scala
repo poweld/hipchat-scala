@@ -3,12 +3,11 @@ package com.imadethatcow.hipchat.rooms
 import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.{HistoriesResponse, HistoryItem}
-import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success, Try}
 
 class ViewHistory(private[this] val apiToken: String) extends Logging {
-  def call(roomIdOrName: Any,
+  def roomHistory(roomIdOrName: Any,
            date: Option[Any] = None, // Must be either "recent" or conform to ISO-8601, use joda for the latter
            timezone: Option[String] = None,
            startIndex: Option[Long] = None,
@@ -21,17 +20,9 @@ class ViewHistory(private[this] val apiToken: String) extends Logging {
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (r <- reverse) req = req.addQueryParameter("reverse", r.toString)
 
-    val jsonOpt = resolveRequest(req)
-    jsonOpt match {
-      case Some(json) =>
-        val historiesResponse = Try[HistoriesResponse](mapper.readValue(json, classOf[HistoriesResponse]))
-        historiesResponse match {
-          case Success(v) =>
-            Some(v.items)
-          case Failure(e) =>
-            log.error("Failed to parse JSON response", e)
-            None
-        }
+    resolveAndDeserialize[HistoriesResponse](req) match {
+      case Some(historiesResponse) =>
+        Some(historiesResponse.items)
       case None => None
     }
   }

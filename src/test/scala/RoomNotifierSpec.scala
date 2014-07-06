@@ -19,19 +19,19 @@ class RoomNotifierSpec extends FlatSpec {
     val notifier = new RoomNotifier(apiToken)
 
     "Room notification" should "not fail" in {
-      assert(notifier.call(room, message))
+      assert(notifier.sendNotification(room, message))
     }
 
     it should "not fail when specifying a color" in {
-      assert(notifier.call(room, message, color = Color.random))
+      assert(notifier.sendNotification(room, message, color = Color.random))
     }
 
     it should "not fail when specifying notify" in {
-      assert(notifier.call(room, message, notify = true))
+      assert(notifier.sendNotification(room, message, notify = true))
     }
 
     it should "not fail when specifying message format" in {
-      assert(notifier.call(room, message, messageFormat = MessageFormat.text))
+      assert(notifier.sendNotification(room, message, messageFormat = MessageFormat.text))
     }
   }
 }

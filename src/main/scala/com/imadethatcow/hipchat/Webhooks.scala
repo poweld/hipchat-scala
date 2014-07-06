@@ -4,17 +4,8 @@ import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.enums.WebhookEvent
 import dispatch._, Defaults._
-import org.slf4j.LoggerFactory
 import WebhookEvent._
-import scala.util.{Failure, Success, Try}
 import com.imadethatcow.hipchat.common.caseclass._
-import com.imadethatcow.hipchat.common.caseclass.WebhookCreateResponse
-import scala.util.Failure
-import scala.Some
-import com.imadethatcow.hipchat.common.caseclass.WebhookCreateRequest
-import com.imadethatcow.hipchat.common.caseclass.WebhookGetItems
-import scala.util.Success
-import com.imadethatcow.hipchat.common.caseclass.WebhookSimple
 
 class Webhooks(private[this] val apiToken: String) extends Logging {
   def create(roomIdOrName: Any,
@@ -28,41 +19,16 @@ class Webhooks(private[this] val apiToken: String) extends Logging {
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
-    val jsonOpt = resolveRequest(req, 201)
-    jsonOpt match {
-      case Some(json) =>
-        val webhookResponse = Try[WebhookCreateResponse](mapper.readValue(json, classOf[WebhookCreateResponse]))
-        webhookResponse match {
-          case Success(v) =>
-            Some(v)
-          case Failure(e) =>
-            log.error("Failed to parse JSON response", e)
-            None
-        }
-      case None =>
-        None
-    }
+    resolveAndDeserialize[WebhookCreateResponse](req, 201)
   }
   def get(roomIdOrName: Any,
           webhookId: Long): Option[Webhook] = {
     val req = addToken(Webhooks.urlGet(roomIdOrName, webhookId), apiToken)
 
-    val jsonOpt = resolveRequest(req)
-    jsonOpt match {
-      case Some(json) =>
-        val webhookItem = Try[WebhookGetItem](mapper.readValue(json, classOf[WebhookGetItem]))
-        webhookItem match {
-          case Success(v) =>
-            val roomOpt = if (v.room == null) None else Some(v.room)
-            val patternOpt = if (v.pattern == null) None else Some(v.pattern)
-            val creatorOpt = if (v.creator == null) None else Some(v.creator)
-            Some(Webhook(roomOpt, v.url, patternOpt, v.event, v.name, v.id, creatorOpt))
-          case Failure(e) =>
-            log.error("Failed to parse JSON response", e)
-            None
-        }
-      case None =>
-        None
+    resolveAndDeserialize[WebhookGetItem](req) match {
+      case Some(webhook) =>
+        Some(Webhook(webhook.room, webhook.url, webhook.pattern, webhook.event, webhook.name, webhook.id, webhook.creator))
+      case None => None
     }
   }
 
@@ -73,22 +39,12 @@ class Webhooks(private[this] val apiToken: String) extends Logging {
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
 
-    val jsonOpt = resolveRequest(req)
-    jsonOpt match {
-      case Some(json) =>
-        val webhookItems = Try(mapper.readValue(json, classOf[WebhookGetItems]))
-        webhookItems match {
-          case Success(v) =>
-            Some(v.items.map({ h =>
-                val patternOpt = if (h.pattern == null) None else Some(h.pattern)
-                WebhookSimple(h.url, patternOpt, h.event, h.name, h.id)
-            }))
-          case Failure(e) =>
-            log.error("Failed to parse JSON response", e)
-            None
-        }
-      case None =>
-        None
+    resolveAndDeserialize[WebhookGetItems](req) match {
+      case Some(webhookGetItems) =>
+        Some(webhookGetItems.items.map { h =>
+          WebhookSimple(h.url, h.pattern, h.event, h.name, h.id)
+        })
+      case None => None
     }
   }
 

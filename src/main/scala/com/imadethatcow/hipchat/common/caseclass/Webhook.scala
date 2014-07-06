@@ -8,9 +8,9 @@ case class WebhookItemLinks(self: String)
 case class WebhookCreateResponse(id: Long, links: WebhookItemLinks)
 
 case class WebhookGetRequest(room_id_or_name: String, webhook_id: Long)
-case class WebhookGetItem(room: RoomsItem, links: WebhookItemLinks, creator: UsersItem, url: String, pattern: String, created: String, event: String, name: String, id: Long)
+case class WebhookGetItem(room: Option[RoomsItem], links: WebhookItemLinks, creator: Option[UsersItem], url: String, pattern: Option[String], created: String, event: String, name: String, id: Long)
 
-case class WebhookGetSimpleItem(links: WebhookItemLinks, url: String, pattern: String, event: String, name: String, id: Long)
+case class WebhookGetSimpleItem(links: WebhookItemLinks, url: String, pattern: Option[String], event: String, name: String, id: Long)
 case class WebhookItemsLinks(self: String, prev: String, next: String)
 case class WebhookGetItems(items: Seq[WebhookGetSimpleItem], startIndex: Long, maxResults: Long, links: WebhookItemsLinks)
 
@@ -27,7 +27,7 @@ case class WebhookRoomExitItem(room: WebhookRoom, sender: WebhookSender)
 case class WebhookRoomExit(event: String, item: WebhookRoomExitItem, oauth_client_id: Option[String], webhook_id: Long)
 
 case class WebhookMessage(date: String, file: Option[HCFile], from: From, id: String, mentions: Option[Seq[MentionItem]], message: String)
-case class WebhookRoomMessageItem(message: WebhookMessage, room: RoomsItem)
+case class WebhookRoomMessageItem(message: WebhookMessage, room: Option[RoomsItem])
 case class WebhookRoomMessage(event: String, item: WebhookRoomMessageItem, oauth_client_id: Option[String], webhook_id: Long)
 
 case class WebhookRoomNotificationMessage(color: Option[String], date: String, from: Option[String], id: Long, mentions: Seq[Mention], message: String, message_format: String)

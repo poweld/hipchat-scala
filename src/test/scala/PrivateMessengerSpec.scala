@@ -21,7 +21,7 @@ class PrivateMessengerSpec  extends FlatSpec {
     val messager = new PrivateMessenger(apiToken)
 
     "Private message" should "not fail" in {
-      assert(messager.call(email, message))
+      assert(messager.sendMessage(email, message))
     }
   }
 }

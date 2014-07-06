@@ -1,4 +1,3 @@
-import com.imadethatcow.hipchat._
 import com.imadethatcow.hipchat.users.Users
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
@@ -17,26 +16,26 @@ class UsersSpec extends FlatSpec {
     val users = new Users(apiToken)
 
     "Users request" should "return a valid JSON response" in {
-      for (seq <- users.call(); user <- seq) {
+      for (seq <- users.getAll(); user <- seq) {
         println(user)
       }
     }
 
     it should "return a valid JSON response when specifying start-index" in {
-      users.call(startIndex = Some(1L))
+      users.getAll(startIndex = Some(1L))
     }
 
     it should "return a valid JSON response when specifying max-results" in {
-      users.call(maxResults = Some(1L))
+      users.getAll(maxResults = Some(1L))
     }
 
     it should "return a valid JSON response when specifying include-guests" in {
-      users.call(includeGuests = Some(true))
+      users.getAll(includeGuests = Some(true))
     }
 
     // This will respond with a 403 if not using proper credentials
     // it should "return a valid JSON response when specifying include-deleted" in {
-    //   users.call(includeDeleted = Some(true))
+    //   users.getAll(includeDeleted = Some(true))
     // }
   }
 }

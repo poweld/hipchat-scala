@@ -4,12 +4,11 @@ import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.RoomNotification
 import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
-import org.slf4j.LoggerFactory
 
 class RoomNotifier(private[this] val apiToken: String) extends Logging {
   import MessageFormat._
   import com.imadethatcow.hipchat.common.enums.Color._
-  def call(roomIdOrName: AnyRef,
+  def sendNotification(roomIdOrName: AnyRef,
            message: String,
            color: Color = Color.yellow,
            notify: Boolean = false,
