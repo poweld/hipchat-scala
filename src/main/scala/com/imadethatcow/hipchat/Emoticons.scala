@@ -1,17 +1,17 @@
 package com.imadethatcow.hipchat
 
 import com.imadethatcow.hipchat.common.Common._
+import com.imadethatcow.hipchat.common.Logging
 import com.imadethatcow.hipchat.common.caseclass.{EmoticonDetails, Emoticon, EmoticonsResponse}
 import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success, Try}
 
-class Emoticons(private[this] val apiToken: String) {
-  val log = LoggerFactory.getLogger(getClass)
+class Emoticons(private[this] val apiToken: String) extends Logging {
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              `type`: Option[Boolean] = None): Option[Seq[Emoticon]] = {
-    var req = addToken(Emoticons.url(), apiToken)
+    var req = addToken(Emoticons.url, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (t <- `type`) req = req.addQueryParameter("type", t.toString)
@@ -32,7 +32,7 @@ class Emoticons(private[this] val apiToken: String) {
   }
 
   def get(emoticonIdOrKey: Any): Option[EmoticonDetails] = {
-    val req = addToken(Emoticons.url(Some(emoticonIdOrKey)), apiToken)
+    val req = addToken(Emoticons.url(emoticonIdOrKey), apiToken)
     val jsonOpt = resolveRequest(req)
     jsonOpt match {
       case Some(json) =>
@@ -43,16 +43,16 @@ class Emoticons(private[this] val apiToken: String) {
             log.error("Failed to parse JSON response", e)
             None
         }
+      case None => None
     }
   }
 }
 
 object Emoticons {
-  def url(emoticonIdOrName: Option[Any] = None) = emoticonIdOrName match {
-    case None =>
-      (apiUrl / "emoticon").GET
-    case _: Some[Int] | _: Some[String] =>
-      (apiUrl / "emoticon" / emoticonIdOrName.get.toString).GET
+  val url = (apiUrl / "emoticon").GET
+  def url(emoticonIdOrName: Any) = emoticonIdOrName match {
+    case _: Long | _: String =>
+      (apiUrl / "emoticon" / emoticonIdOrName.toString).GET
   }
 }
 

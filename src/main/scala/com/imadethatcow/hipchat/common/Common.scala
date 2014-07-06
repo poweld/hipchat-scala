@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory
 import scala.util.{Success, Failure, Try}
 import scala.annotation.tailrec
 
-object Common {
-  val log = LoggerFactory.getLogger(getClass)
-  val config = ConfigFactory.load
-
+object Common extends Logging with Config {
   val secureTry = Try(config.getBoolean("com.imadethatcow.hipchat.secure"))
   val secure = secureTry match {
     case Failure(e) => true
@@ -28,15 +25,12 @@ object Common {
   val apiRootSecure = "https://api.hipchat.com"
   val version = "v2"
   val apiUrl = if (secure) url(apiRootSecure) / version else url(apiRoot) / version
-  def addFormUrlEncodedVals(req: Req, vals: (String,String)*): Req = {
-    @tailrec def loop(req: Req, vals: Seq[(String, String)]): Req = vals match {
-      case Nil => req
-      case head :: tail =>
-        val (name, value) = head
-        loop(req.addParameter(name, value), tail)
+
+  def addFormUrlEncodedVals(req: Req, vals: Seq[(String,String)]): Req =
+    vals.foldLeft(req) {
+      case (request, (name, value)) => request.addParameter(name, value)
     }
-    loop(req, vals)
-  }
+
   def addToken(req: Req, token: String): Req = req.addQueryParameter("auth_token", token.toString)
   def resolveRequest(req: Req, expectedResponseCode: Int = 200): Option[String] = {
     val response = http(req).option.apply()
@@ -52,4 +46,12 @@ object Common {
         None
     }
   }
+}
+
+trait Logging {
+  val log = LoggerFactory.getLogger(getClass)
+}
+
+trait Config {
+  val config = ConfigFactory.load
 }

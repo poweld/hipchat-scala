@@ -1,6 +1,6 @@
 package com.imadethatcow.hipchat
 
-import com.imadethatcow.hipchat.common.Common
+import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.enums.WebhookEvent
 import dispatch._, Defaults._
@@ -16,8 +16,7 @@ import com.imadethatcow.hipchat.common.caseclass.WebhookGetItems
 import scala.util.Success
 import com.imadethatcow.hipchat.common.caseclass.WebhookSimple
 
-class Webhooks(private[this] val apiToken: String) {
-  val log = LoggerFactory.getLogger(getClass)
+class Webhooks(private[this] val apiToken: String) extends Logging {
   def create(roomIdOrName: Any,
              url: String,
              event: WebhookEvent,
@@ -77,7 +76,7 @@ class Webhooks(private[this] val apiToken: String) {
     val jsonOpt = resolveRequest(req)
     jsonOpt match {
       case Some(json) =>
-        val webhookItems = Try[WebhookGetItems](mapper.readValue(json, classOf[WebhookGetItems]))
+        val webhookItems = Try(mapper.readValue(json, classOf[WebhookGetItems]))
         webhookItems match {
           case Success(v) =>
             Some(v.items.map({ h =>
@@ -104,7 +103,6 @@ class Webhooks(private[this] val apiToken: String) {
 }
 
 object Webhooks {
-  val log = LoggerFactory.getLogger(getClass)
   def urlBase(roomIdOrName: Any) = {
     roomIdOrName match {
       case _: String | _: Long =>

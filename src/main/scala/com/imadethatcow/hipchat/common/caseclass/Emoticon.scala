@@ -7,7 +7,7 @@ case class EmoticonsItem(url: String, links: EmoticonsItemLinks, id: Long, short
 case class EmoticonsResponse(items: Seq[EmoticonsItem], startIndex: Long, maxResults: Long, links: EmoticonsLinks)
 
 case class EmoticonDetails(width: Int,
-                           audio_path: String,
+                           audio_path: Option[String],
                            id: Long,
                            shortcut: String,
                            height: Int,

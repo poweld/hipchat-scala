@@ -1,13 +1,13 @@
 package com.imadethatcow.hipchat.users
 
 import com.imadethatcow.hipchat.common.Common._
+import com.imadethatcow.hipchat.common.Logging
 import com.imadethatcow.hipchat.common.caseclass.{User, UsersResponse}
 import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success, Try}
 
-class Users(private[this] val apiToken: String) {
-  val log = LoggerFactory.getLogger(getClass)
+class Users(private[this] val apiToken: String) extends Logging {
   def call(startIndex: Option[Long] = None,
           maxResults: Option[Long] = None,
           includeGuests: Option[Boolean] = None,

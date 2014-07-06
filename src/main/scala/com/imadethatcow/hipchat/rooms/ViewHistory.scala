@@ -1,14 +1,13 @@
 package com.imadethatcow.hipchat.rooms
 
-import com.imadethatcow.hipchat.common.Common
+import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.{HistoriesResponse, HistoryItem}
 import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success, Try}
 
-class ViewHistory(private[this] val apiToken: String) {
-  val log = LoggerFactory.getLogger(getClass)
+class ViewHistory(private[this] val apiToken: String) extends Logging {
   def call(roomIdOrName: Any,
            date: Option[Any] = None, // Must be either "recent" or conform to ISO-8601, use joda for the latter
            timezone: Option[String] = None,

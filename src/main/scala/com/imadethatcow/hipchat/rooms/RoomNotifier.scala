@@ -1,15 +1,14 @@
 package com.imadethatcow.hipchat.rooms
 
-import com.imadethatcow.hipchat.common.Common
+import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.RoomNotification
 import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
 import org.slf4j.LoggerFactory
 
-class RoomNotifier(private[this] val apiToken: String) {
+class RoomNotifier(private[this] val apiToken: String) extends Logging {
   import MessageFormat._
   import com.imadethatcow.hipchat.common.enums.Color._
-  val log = LoggerFactory.getLogger(getClass)
   def call(roomIdOrName: AnyRef,
            message: String,
            color: Color = Color.yellow,
@@ -30,7 +29,6 @@ class RoomNotifier(private[this] val apiToken: String) {
 }
 
 object RoomNotifier {
-  val log = LoggerFactory.getLogger(getClass)
   def url(roomIdOrName: Any) = {
     roomIdOrName match {
       case _: String | _: Long =>
