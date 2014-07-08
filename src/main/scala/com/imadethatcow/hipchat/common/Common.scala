@@ -52,8 +52,8 @@ object Common extends Logging with Config {
     jsonOpt match {
       case Some(json) =>
         val tClass = implicitly[ClassTag[T]].runtimeClass
-        val emoticonsResponse = Try(mapper.readValue(json, tClass))
-        emoticonsResponse match {
+        val response = Try(mapper.readValue(json, tClass))
+        response match {
           case Success(v) =>
             Some(v.asInstanceOf[T])
           case Failure(e) =>
