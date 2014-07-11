@@ -18,8 +18,8 @@ object Common extends Logging with Config {
   }
 
   // Mapper will ignore pairs with null/None values
-  val mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL)
-  mapper.registerModule(DefaultScalaModule)
+  val mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL).registerModule(DefaultScalaModule)
+  val writeMapper = new ObjectMapper().registerModule(DefaultScalaModule)
   val http = Http.configure(_ setFollowRedirects true)
   val apiRoot = "http://api.hipchat.com"
   val apiRootSecure = "https://api.hipchat.com"

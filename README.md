@@ -39,6 +39,7 @@ Rooms
 * Delete webhook
 * Get webhook
 * View history
+* Update room
 
 User
 ----
@@ -64,7 +65,6 @@ Rooms
 -----
 * Create room
 * Send room notification redirect
-* Update room
 * Get room
 * Delete room
 * Get room statistics

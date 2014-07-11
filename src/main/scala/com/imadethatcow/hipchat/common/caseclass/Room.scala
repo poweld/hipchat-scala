@@ -24,3 +24,11 @@ case class RoomDetails(xmpp_jid: String,
                        id: Long,
                        guest_access_url: String,
                        last_active: String)
+
+case class Owner(id: Option[Any])
+case class RoomUpdate(name: String,
+                      privacy: String,
+                      is_archived: Boolean,
+                      is_guest_accessible: Boolean,
+                      topic: String,
+                      owner: Owner)
