@@ -20,9 +20,15 @@ TODO
 Implemented Methods
 ===================
 
+OAuth Sessions
+--------------
+* Oath get session
+* Generate Token
+
 Emoticons
 ---------
 * Get all emoticons
+* Get single emoticon
 
 Rooms
 -----
@@ -50,15 +56,9 @@ Capabilities
 ------------
 * Get capabilities
 
-Emoticons
----------
-* Get single emoticon
-
 OAuth Sessions
 --------------
 * Oath delete session
-* Oath get session
-* Generate Token
 
 Rooms
 -----

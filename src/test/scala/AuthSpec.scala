@@ -41,5 +41,10 @@ class AuthSpec extends FlatSpec with Matchers {
       }
     }
     */
+    "Auth get session" should "return a valid JSON response" in {
+      for (sessionResponse <- auth.getSession(apiToken)) {
+        println(sessionResponse)
+      }
+    }
   }
 }

@@ -3,7 +3,7 @@ package com.imadethatcow.hipchat
 import com.imadethatcow.hipchat.common.Common._
 import com.imadethatcow.hipchat.common.Logging
 
-import com.imadethatcow.hipchat.common.caseclass.AuthResponse
+import com.imadethatcow.hipchat.common.caseclass.{GetSessionResponse, AuthResponse}
 import com.imadethatcow.hipchat.common.enums.Scope.Scope
 import com.imadethatcow.hipchat.common.enums.AuthGrantType
 
@@ -32,10 +32,21 @@ class Auth(private[this] val apiToken: String) extends Logging {
     val req = createReqWithHeaderAndParams(urlEncodedVals)
     resolveAndDeserialize[AuthResponse](req)
   }
+
+  def getSession(token: String) = {
+    val req = addToken(Auth.urlGet(token), apiToken)
+      .setHeader("Content-Type", "application/x-www-form-urlencoded")
+      .addParameter("session-id", token)
+
+    resolveAndDeserialize[GetSessionResponse](req)
+  }
 }
 
 private object Auth {
-  val urlBase = apiUrl / "oauth" / "token"
+  private val urlBase = apiUrl / "oauth" / "token"
+  def urlGet(token: String) = {
+    (urlBase / token).GET
+  }
   val urlPost = urlBase.POST
 }
 
