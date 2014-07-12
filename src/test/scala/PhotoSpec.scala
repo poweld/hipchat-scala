@@ -1,4 +1,4 @@
-import com.imadethatcow.hipchat.users.{Photos, Photo}
+import com.imadethatcow.hipchat.users.Photos
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
 
@@ -22,6 +22,9 @@ class PhotoSpec extends FlatSpec with Matchers {
     val photo = new Photos(apiToken)
     "Put photo" should "return true" in {
       photo.update(email, image) shouldEqual true
+    }
+    "Delete photo" should "return true" in {
+      photo.delete(email) shouldEqual true
     }
   }
 }

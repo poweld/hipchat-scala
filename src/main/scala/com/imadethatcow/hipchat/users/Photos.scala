@@ -15,6 +15,14 @@ class Photos(private[this] val apiToken: String) {
       case None => false
     }
   }
+  def delete(idOrEmail: String) = {
+    val req = addToken(Photos.urlDelete(idOrEmail), apiToken)
+
+    resolveRequest(req, 204) match {
+      case Some(r) => true
+      case None => false
+    }
+  }
 }
 
 object Photos {
