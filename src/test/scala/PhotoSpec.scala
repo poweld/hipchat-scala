@@ -1,4 +1,4 @@
-import com.imadethatcow.hipchat.users.Photo
+import com.imadethatcow.hipchat.users.{Photos, Photo}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
 
@@ -19,11 +19,9 @@ class PhotoSpec extends FlatSpec with Matchers {
   if (imageTry.isFailure) fail(s"Could not find $IMAGE_KEY in config")
 
   for (apiToken <- apiTokenTry; email <- emailTry; image <- imageTry) {
-    val photo = new Photo(apiToken)
-    "Put photo" should "return a valid JSON response" in {
-      for (sessionResponse <- photo.update(email, image)) {
-        println(sessionResponse)
-      }
+    val photo = new Photos(apiToken)
+    "Put photo" should "return true" in {
+      photo.update(email, image) shouldEqual true
     }
   }
 }
