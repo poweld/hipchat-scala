@@ -8,12 +8,12 @@ class AuthSpec extends FlatSpec with Matchers {
 
   val config = ConfigFactory.load
   val API_TOKEN_KEY = "com.imadethatcow.hipchat.auth_token"
-  val USERNAME = "com.imadethatcow.hipchat.username"
-  val PASSWORD = "com.imadethatcow.hipchat.password"
+  val USERNAME = "com.imadethatcow.hipchat.test_username"
+  val PASSWORD = "com.imadethatcow.hipchat.test_password"
   val apiTokenTry = Try(config.getString(API_TOKEN_KEY))
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
 
-  for (apiToken <- apiTokenTry) { //}; username <- usernameTry; password <- passwordTry) {
+  for (apiToken <- apiTokenTry) {
     val auth = new Auth(apiToken)
 
     // this can work, but it is probably not good to test external API authentication

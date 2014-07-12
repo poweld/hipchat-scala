@@ -4,8 +4,15 @@ import com.imadethatcow.hipchat.common.Common
 import Common._
 
 class Photo(private[this] val apiToken: String) {
-  def update(idOrEmail: String) = {
+  def update(idOrEmail: String, encodedPhoto: String) = {
     val req = addToken(Photo.urlPut(idOrEmail), apiToken)
+      .setBody(encodedPhoto)
+      .setHeader("Content-Type", "application/json")
+
+    resolveRequest(req, 204) match {
+      case Some(r) => true
+      case None => false
+    }
   }
 }
 
