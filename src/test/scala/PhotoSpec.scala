@@ -1,4 +1,4 @@
-import com.imadethatcow.hipchat.users.{Photos, Photo}
+import com.imadethatcow.hipchat.users.Photos
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
 
