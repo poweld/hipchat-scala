@@ -40,12 +40,26 @@ class Auth(private[this] val apiToken: String) extends Logging {
 
     resolveAndDeserialize[GetSessionResponse](req)
   }
+
+  def deleteSession(token: String): Boolean = {
+    val req = addToken(Auth.urlDelete(token), apiToken)
+      .setHeader("Content-Type", "application/x-www-form-urlencoded")
+      .addParameter("session-id", token)
+
+    resolveRequest(req, 204) match {
+      case Some(response) => true
+      case None => false
+    }
+  }
 }
 
 private object Auth {
   private val urlBase = apiUrl / "oauth" / "token"
   def urlGet(token: String) = {
     (urlBase / token).GET
+  }
+  def urlDelete(token: String) = {
+    (urlBase / token).DELETE
   }
   val urlPost = urlBase.POST
 }

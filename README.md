@@ -22,6 +22,7 @@ Implemented Methods
 
 OAuth Sessions
 --------------
+* Oath delete session
 * Oath get session
 * Generate Token
 
@@ -56,10 +57,6 @@ Add Ons
 Capabilities
 ------------
 * Get capabilities
-
-OAuth Sessions
---------------
-* Oath delete session
 
 Rooms
 -----
