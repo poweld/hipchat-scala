@@ -62,7 +62,6 @@ Rooms
 -----
 * Create room
 * Send room notification redirect
-* Get room
 * Delete room
 * Get room statistics
 * Get all members
