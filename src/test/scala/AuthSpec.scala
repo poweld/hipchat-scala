@@ -46,10 +46,8 @@ class AuthSpec extends FlatSpec with Matchers {
         println(sessionResponse)
       }
     }
-    "Auth delete session" should "return a valid JSON response" in {
-      for (sessionResponse <- auth.deleteSession(apiToken)) {
-        println(sessionResponse)
-      }
+    "Auth delete session" should "return true" in {
+      auth.deleteSession(apiToken) shouldEqual true
     }
   }
 }
