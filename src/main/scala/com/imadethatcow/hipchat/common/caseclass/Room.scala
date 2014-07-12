@@ -32,3 +32,5 @@ case class RoomUpdate(name: String,
                       is_guest_accessible: Boolean,
                       topic: String,
                       owner: Owner)
+
+case class TopicRequest(topic: String)
