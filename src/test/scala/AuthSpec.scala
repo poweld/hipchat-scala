@@ -46,8 +46,8 @@ class AuthSpec extends FlatSpec with Matchers {
         println(sessionResponse)
       }
     }
-    "Auth delete session" should "return true" in {
-      auth.deleteSession(apiToken) shouldEqual true
-    }
+    //"Auth delete session" should "return true" in {
+    //  auth.deleteSession(apiToken) shouldEqual true
+    //}
   }
 }
