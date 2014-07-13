@@ -45,6 +45,7 @@ Rooms
 
 User
 ----
+* Update photo
 * Private message user
 * Get all users
 
@@ -72,7 +73,6 @@ Rooms
 
 User
 ----
-* Update photo
 * Delete photo
 * Update user
 * Delete user
