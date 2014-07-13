@@ -1,10 +1,9 @@
-import com.imadethatcow.hipchat._
 import com.imadethatcow.hipchat.rooms.Rooms
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
 import scala.util.Try
 
-class RoomsSpec extends FlatSpec {
+class RoomsSpec extends FlatSpec with Matchers {
   val config = ConfigFactory.load
   val API_TOKEN_KEY = "com.imadethatcow.hipchat.auth_token"
   val TEST_ROOM_KEY = "com.imadethatcow.hipchat.test_room"
@@ -34,9 +33,12 @@ class RoomsSpec extends FlatSpec {
       rooms.getAll(includeArchived = Some(true))
     }
 
-
     "Room details request" should "Return a valid JSON response" in {
       println(rooms.get(room))
+    }
+
+    "Set topic request" should "Return true" in {
+      rooms.setTopic(room, "Hello world!") shouldEqual true
     }
   }
 }

@@ -14,9 +14,9 @@ import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 
 class Rooms(private[this] val apiToken: String) extends Logging {
   def getAll(startIndex: Option[Long] = None,
-           maxResults: Option[Long] = None,
-           includeArchived: Option[Boolean] = None): Option[Seq[Room]] = {
-    var req = addToken(Rooms.url, apiToken)
+             maxResults: Option[Long] = None,
+             includeArchived: Option[Boolean] = None): Option[Seq[Room]] = {
+    var req = addToken(Rooms.url.GET, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (ia <- includeArchived) req = req.addQueryParameter("include-archived", ia.toString)
@@ -29,7 +29,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
   }
 
   def get(roomIdOrName: Any): Option[RoomDetails] = {
-    val req = addToken(Rooms.url(roomIdOrName), apiToken)
+    val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
     resolveAndDeserialize[RoomDetails](req)
   }
 
@@ -44,20 +44,34 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     val name = newRoomName.substring(0, Math.min(newRoomName.length, 50)) // Name may only be 50 characters long
     val roomUpdate = RoomUpdate(name, newPrivacy.toString, newIsArchived, newIsGuestAccessible, newTopic, Owner(newOwnerIdOrEmail))
     val json = writeMapper.writeValueAsString(roomUpdate)
-    val req = addToken(Rooms.url(roomIdOrName).PUT, apiToken)
+    val req = addToken(Rooms.urlPut(roomIdOrName).PUT, apiToken)
       .setBody(json)
       .setHeader("Content-Type", "application/json")
     resolveRequest(req, 204)
     true
   }
+
+  def setTopic(roomIdOrName: Any,
+               topic: String) = {
+    val topicUrl = (Rooms.url(roomIdOrName) / "topic").PUT
+    val req = addToken(topicUrl, apiToken)
+      .setBody(writeMapper.writeValueAsString(TopicRequest(topic)))
+      .setHeader("Content-Type", "application/json")
+    resolveRequest(req, 204) match {
+      case Some(_) => true
+      case None => false
+    }
+  }
 }
 
-object Rooms {
-  val url = (apiUrl / "room").GET
-  def url(roomIdOrName: Any) = roomIdOrName match {
+private object Rooms {
+  val url = apiUrl / "room"
+  private def url(roomIdOrName: Any) = roomIdOrName match {
     case _: Long | _: String =>
-      (apiUrl / "room" / roomIdOrName.toString).GET
+      apiUrl / "room" / roomIdOrName.toString
   }
+  def urlPut(roomIdOrName: Any) = url(roomIdOrName).PUT
+  def urlGet(roomIdOrName: Any) = url(roomIdOrName).GET
 }
 
 

@@ -35,6 +35,7 @@ Rooms
 -----
 * Get all rooms (**Rooms**)
 * Send room notification
+* Set topic
 * Create webhook
 * Get all webhooks
 * Delete webhook
@@ -62,11 +63,9 @@ Rooms
 -----
 * Create room
 * Send room notification redirect
-* Get room
 * Delete room
 * Get room statistics
 * Get all members
-* Set topic
 * Add member
 * Remove member
 * Invite user
