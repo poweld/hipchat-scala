@@ -23,5 +23,8 @@ class PhotoSpec extends FlatSpec with Matchers {
     "Put photo" should "return true" in {
       photo.update(email, image) shouldEqual true
     }
+    "Delete photo" should "return true" in {
+      photo.delete(email) shouldEqual true
+    }
   }
 }
