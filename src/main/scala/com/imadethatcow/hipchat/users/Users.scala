@@ -17,7 +17,7 @@ class Users(private[this] val apiToken: String) extends Logging {
     for (ig <- includeGuests) req = req.addQueryParameter("include-guests", ig.toString)
     for (mr <- includeDeleted) req = req.addQueryParameter("include-deleted", mr.toString)
 
-    resolveAndDeserializeFut[UsersResponse](req) map {
+    resolveAndDeserialize[UsersResponse](req) map {
       response => response.items map {
         item => User(item.mention_name, item.id, item.name)
       }

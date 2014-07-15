@@ -22,7 +22,7 @@ class RoomNotifier(private[this] val apiToken: String) extends Logging {
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 

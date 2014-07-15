@@ -20,13 +20,13 @@ class Webhooks(private[this] val apiToken: String) extends Logging {
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
-    resolveAndDeserializeFut[WebhookCreateResponse](req, 201)
+    resolveAndDeserialize[WebhookCreateResponse](req, 201)
   }
   def get(roomIdOrName: Any,
           webhookId: Long): Future[Webhook] = {
     val req = addToken(Webhooks.urlGet(roomIdOrName, webhookId), apiToken)
 
-    resolveAndDeserializeFut[WebhookGetItem](req) map {
+    resolveAndDeserialize[WebhookGetItem](req) map {
       response => Webhook(response.room, response.url, response.pattern, response.event, response.name, response.id, response.creator)
     }
   }
@@ -38,7 +38,7 @@ class Webhooks(private[this] val apiToken: String) extends Logging {
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
 
-    resolveAndDeserializeFut[WebhookGetItems](req) map {
+    resolveAndDeserialize[WebhookGetItems](req) map {
       response => response.items.map {
         item => WebhookSimple(item.url, item.pattern, item.event, item.name, item.id)
       }
@@ -48,7 +48,7 @@ class Webhooks(private[this] val apiToken: String) extends Logging {
   def delete(roomIdOrName: Any, webhookId: Long): Future[Boolean] = {
     val req = addToken(Webhooks.urlDelete(roomIdOrName, webhookId), apiToken)
 
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 

@@ -22,7 +22,7 @@ class ViewHistory(private[this] val apiToken: String) extends Logging {
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (r <- reverse) req = req.addQueryParameter("reverse", r.toString)
 
-    resolveAndDeserializeFut[HistoriesResponse](req) map {
+    resolveAndDeserialize[HistoriesResponse](req) map {
       response => response.items
     }
   }

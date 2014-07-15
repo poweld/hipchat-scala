@@ -12,12 +12,12 @@ class Photos(private[this] val apiToken: String) {
       .setBody(mapper.writeValueAsString(Photo(encodedPhoto)))
       .setHeader("Content-Type", "application/json")
 
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
   def delete(idOrEmail: String) = {
     val req = addToken(Photos.urlDelete(idOrEmail), apiToken)
 
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 

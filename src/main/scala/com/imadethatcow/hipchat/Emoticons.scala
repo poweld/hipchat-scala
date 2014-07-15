@@ -15,7 +15,7 @@ class Emoticons(private[this] val apiToken: String) extends Logging {
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (t <- `type`) req = req.addQueryParameter("type", t.toString)
 
-    resolveAndDeserializeFut[EmoticonsResponse](req) map {
+    resolveAndDeserialize[EmoticonsResponse](req) map {
       response => response.items.map {
         item => Emoticon(item.url, item.id, item.shortcut)
       }.toSeq
@@ -24,7 +24,7 @@ class Emoticons(private[this] val apiToken: String) extends Logging {
 
   def get(emoticonIdOrKey: Any): Future[EmoticonDetails] = {
     val req = addToken(Emoticons.url(emoticonIdOrKey), apiToken)
-    resolveAndDeserializeFut[EmoticonDetails](req)
+    resolveAndDeserialize[EmoticonDetails](req)
   }
 }
 

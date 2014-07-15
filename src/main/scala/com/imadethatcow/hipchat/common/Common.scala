@@ -36,7 +36,7 @@ object Common extends Logging with Config {
 
   def addToken(req: Req, token: String): Req = req.addQueryParameter("auth_token", token.toString)
 
-  def resolveRequestFut(req: Req, expectedResponseCode: Int = defaultResponseCode): Future[Response] = {
+  def resolveRequest(req: Req, expectedResponseCode: Int = defaultResponseCode): Future[Response] = {
     http(req) map {
       response =>
         if (response.getStatusCode != expectedResponseCode)
@@ -46,8 +46,8 @@ object Common extends Logging with Config {
     }
   }
 
-  def resolveAndDeserializeFut[T: ClassTag](req: Req, expectedResponseCode: Int = defaultResponseCode): Future[T] = {
-    resolveRequestFut(req, expectedResponseCode) map {
+  def resolveAndDeserialize[T: ClassTag](req: Req, expectedResponseCode: Int = defaultResponseCode): Future[T] = {
+    resolveRequest(req, expectedResponseCode) map {
       response =>
         val tClass = implicitly[ClassTag[T]].runtimeClass
         val mappedObject = mapper.readValue(response.getResponseBody, tClass)

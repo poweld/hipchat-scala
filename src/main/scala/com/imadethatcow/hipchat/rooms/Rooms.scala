@@ -23,7 +23,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (ia <- includeArchived) req = req.addQueryParameter("include-archived", ia.toString)
 
-    resolveAndDeserializeFut[RoomsResponse](req) map {
+    resolveAndDeserialize[RoomsResponse](req) map {
       response => response.items.map {
         item => Room(item.id, item.name)
       }
@@ -32,7 +32,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
 
   def get(roomIdOrName: Any): Future[RoomDetails] = {
     val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
-    resolveAndDeserializeFut[RoomDetails](req)
+    resolveAndDeserialize[RoomDetails](req)
   }
 
   def update(roomIdOrName: Any,
@@ -49,7 +49,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     val req = addToken(Rooms.urlPut(roomIdOrName).PUT, apiToken)
       .setBody(json)
       .setHeader("Content-Type", "application/json")
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 
   def setTopic(roomIdOrName: Any,
@@ -58,7 +58,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     val req = addToken(topicUrl, apiToken)
       .setBody(writeMapper.writeValueAsString(TopicRequest(topic)))
       .setHeader("Content-Type", "application/json")
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 

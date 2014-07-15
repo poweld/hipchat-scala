@@ -22,7 +22,7 @@ class Auth(private[this] val apiToken: String) extends Logging {
     val urlEncodedVals = Seq(("grant_type", AuthGrantType.personal.toString))
 
     val req = createReqWithHeaderAndParams(urlEncodedVals)
-    resolveAndDeserializeFut[AuthResponse](req)
+    resolveAndDeserialize[AuthResponse](req)
   }
 
   def genPasswordToken(username: String,
@@ -32,7 +32,7 @@ class Auth(private[this] val apiToken: String) extends Logging {
       "username" -> username, "password" -> password, "scope" -> scopes.mkString(" "))
 
     val req = createReqWithHeaderAndParams(urlEncodedVals)
-    resolveAndDeserializeFut[AuthResponse](req)
+    resolveAndDeserialize[AuthResponse](req)
   }
 
   def getSession(token: String): Future[GetSessionResponse] = {
@@ -40,7 +40,7 @@ class Auth(private[this] val apiToken: String) extends Logging {
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .addParameter("session-id", token)
 
-    resolveAndDeserializeFut[GetSessionResponse](req)
+    resolveAndDeserialize[GetSessionResponse](req)
   }
 
   def deleteSession(token: String): Future[Boolean] = {
@@ -48,7 +48,7 @@ class Auth(private[this] val apiToken: String) extends Logging {
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .addParameter("session-id", token)
 
-    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 
