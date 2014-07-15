@@ -12,6 +12,25 @@ import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 import scala.concurrent.{ExecutionContext, Future}
 
 class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
+  def create(guest_access: Boolean = false,
+             name: String,
+             owner_user_id: Option[String] = None,
+             privacy : Privacy = Privacy.public): Future[RoomsCreateResponse] = {
+    val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
+    val body = mapper.writeValueAsString(room)
+
+    val req = addToken(Rooms.url.POST, apiToken)
+      .setBody(body)
+      .setHeader("Content-Type", "application/json")
+
+    resolveAndDeserialize[RoomsCreateResponse](req, 201)
+  }
+
+  def delete(roomIdOrName: Any): Future[Boolean] = {
+    val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false }
+  }
+
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              includeArchived: Option[Boolean] = None): Future[Seq[Room]] = {
@@ -67,6 +86,8 @@ private object Rooms {
   }
   def urlPut(roomIdOrName: Any) = url(roomIdOrName).PUT
   def urlGet(roomIdOrName: Any) = url(roomIdOrName).GET
+  def urlDelete(roomIdOrName: Any) = url(roomIdOrName).DELETE
+
 }
 
 
