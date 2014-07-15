@@ -51,7 +51,7 @@ object Common extends Logging with Config {
       response =>
         val tClass = implicitly[ClassTag[T]].runtimeClass
         val mappedObject = mapper.readValue(response.getResponseBody, tClass)
-        mappedObject.asInstanceOf
+        mappedObject.asInstanceOf[T]
     }
   }
 }

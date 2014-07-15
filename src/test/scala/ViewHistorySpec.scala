@@ -3,6 +3,7 @@ import com.imadethatcow.hipchat.rooms.ViewHistory
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ViewHistorySpec extends FlatSpec {
 

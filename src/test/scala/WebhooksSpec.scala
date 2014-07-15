@@ -1,8 +1,12 @@
 import com.imadethatcow.hipchat._
+import com.imadethatcow.hipchat.common.caseclass.Webhook
 import com.imadethatcow.hipchat.common.enums.WebhookEvent
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class WebhooksSpec extends FlatSpec {
   val config = ConfigFactory.load
@@ -22,24 +26,38 @@ class WebhooksSpec extends FlatSpec {
       for (hookResponse <- webhooks.create(room, url, event)) {
         val id = hookResponse.id
 
-        val hookOpt = webhooks.get(room, id)
-        if (hookOpt.isDefined)
-          println(hookOpt.get)
-        else
-          fail("Did not receive a valid hook from get request")
+        val hookFut = webhooks.get(room, id)
+        hookFut.onFailure {
+          case ex: Throwable =>
+            fail("Did not receive a valid hook from get request")
+        }
+        hookFut.onSuccess {
+          case hook: Webhook =>
+            println(hook)
+        }
+        Await.ready(hookFut, Duration.Inf)
 
         println(s"Deleting webhook id $id")
-        assert(webhooks.delete(room, id))
+        val deleteFut = webhooks.delete(room, id)
+        deleteFut.onFailure {
+          case ex: Throwable =>
+            fail(ex)
+        }
+        Await.ready(deleteFut, Duration.Inf)
       }
     }
 
     "Webhook get all request" should "return a valid JSON response" in {
       val hooks = webhooks.getAll(room)
-      if (hooks.isDefined)
-        for (hook <- hooks)
-          println(hook)
-      else
-        fail("Did not receive a valid hook from get request")
+      hooks.onFailure {
+        case ex: Throwable =>
+          fail(ex)
+      }
+      hooks.onSuccess {
+        case h =>
+          println(h)
+      }
+      Await.ready(hooks, Duration.Inf)
     }
   }
 }

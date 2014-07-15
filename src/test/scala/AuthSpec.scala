@@ -3,6 +3,7 @@ import com.typesafe.config.ConfigFactory
 import org.scalatest._
 import scala.util.Try
 import com.imadethatcow.hipchat.common.enums.Scope._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AuthSpec extends FlatSpec with Matchers {
 
