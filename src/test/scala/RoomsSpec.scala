@@ -1,6 +1,7 @@
 import com.imadethatcow.hipchat.rooms.Rooms
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 class RoomsSpec extends FlatSpec with Matchers {
@@ -11,6 +12,8 @@ class RoomsSpec extends FlatSpec with Matchers {
   val testRoomTry = Try(config.getString(TEST_ROOM_KEY))
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
   if (testRoomTry.isFailure) fail("Could not find test_room in config")
+
+  implicit def executionContext = ExecutionContext.Implicits.global
 
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val rooms = new Rooms(apiToken)

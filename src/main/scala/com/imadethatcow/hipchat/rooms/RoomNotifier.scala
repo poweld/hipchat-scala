@@ -5,9 +5,8 @@ import Common._
 import com.imadethatcow.hipchat.common.caseclass.RoomNotification
 import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class RoomNotifier(private[this] val apiToken: String) extends Logging {
+class RoomNotifier(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   import MessageFormat._
   import com.imadethatcow.hipchat.common.enums.Color._
   def sendNotification(roomIdOrName: AnyRef,

@@ -7,9 +7,8 @@ import com.imadethatcow.hipchat.common.caseclass.{GetSessionResponse, AuthRespon
 import com.imadethatcow.hipchat.common.enums.Scope.Scope
 import com.imadethatcow.hipchat.common.enums.AuthGrantType
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class Auth(private[this] val apiToken: String) extends Logging {
+class Auth(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
 
   private def createReqWithHeaderAndParams(urlEncodedVals: Seq[(String, String)]) = {
     val reqWithHeader = addToken(Auth.urlPost, apiToken)

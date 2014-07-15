@@ -2,6 +2,7 @@ import com.imadethatcow.hipchat.users.Photos
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
 
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 class PhotoSpec extends FlatSpec with Matchers {
@@ -17,6 +18,8 @@ class PhotoSpec extends FlatSpec with Matchers {
   if (apiTokenTry.isFailure) fail(s"Could not find $API_TOKEN_KEY in config")
   if (emailTry.isFailure) fail(s"Could not find $EMAIL_KEY in config")
   if (imageTry.isFailure) fail(s"Could not find $IMAGE_KEY in config")
+
+  implicit def executionContext = ExecutionContext.Implicits.global
 
   for (apiToken <- apiTokenTry; email <- emailTry; image <- imageTry) {
     val photo = new Photos(apiToken)

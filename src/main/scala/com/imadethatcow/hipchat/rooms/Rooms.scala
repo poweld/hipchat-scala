@@ -3,18 +3,15 @@ package com.imadethatcow.hipchat.rooms
 import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass._
-import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 import com.imadethatcow.hipchat.common.caseclass.RoomsResponse
 import com.imadethatcow.hipchat.common.caseclass.RoomDetails
 import com.imadethatcow.hipchat.common.caseclass.RoomUpdate
 import com.imadethatcow.hipchat.common.caseclass.Room
-import scala.Some
 import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class Rooms(private[this] val apiToken: String) extends Logging {
+class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              includeArchived: Option[Boolean] = None): Future[Seq[Room]] = {

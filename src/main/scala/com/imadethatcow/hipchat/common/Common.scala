@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala._
 import com.typesafe.config.ConfigFactory
-import dispatch.Defaults._
 import dispatch._
+import dispatch.Defaults._
 import org.slf4j.LoggerFactory
 import scala.reflect.ClassTag
 import scala.util.{Success, Failure, Try}
 import com.ning.http.client.Response
-
 
 object Common extends Logging with Config {
   val secureTry = Try(config.getBoolean("com.imadethatcow.hipchat.secure"))

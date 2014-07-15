@@ -6,9 +6,8 @@ import com.imadethatcow.hipchat.common.enums.WebhookEvent
 import scala.concurrent.{ExecutionContext, Future}
 import WebhookEvent._
 import com.imadethatcow.hipchat.common.caseclass._
-import ExecutionContext.Implicits.global
 
-class Webhooks(private[this] val apiToken: String) extends Logging {
+class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def create(roomIdOrName: Any,
              url: String,
              event: WebhookEvent,

@@ -4,11 +4,9 @@ import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.{HistoriesResponse, HistoryItem}
 
-import scala.util.{Failure, Success, Try}
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class ViewHistory(private[this] val apiToken: String) extends Logging {
+class ViewHistory(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def roomHistory(roomIdOrName: Any,
            date: Option[Any] = None, // Must be either "recent" or conform to ISO-8601, use joda for the latter
            timezone: Option[String] = None,
