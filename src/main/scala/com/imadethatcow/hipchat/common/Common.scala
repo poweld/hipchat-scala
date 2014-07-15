@@ -9,6 +9,8 @@ import dispatch._
 import org.slf4j.LoggerFactory
 import scala.reflect.ClassTag
 import scala.util.{Success, Failure, Try}
+import com.ning.http.client.Response
+
 
 object Common extends Logging with Config {
   val secureTry = Try(config.getBoolean("com.imadethatcow.hipchat.secure"))
@@ -33,34 +35,23 @@ object Common extends Logging with Config {
     }
 
   def addToken(req: Req, token: String): Req = req.addQueryParameter("auth_token", token.toString)
-  def resolveRequest(req: Req, expectedResponseCode: Int = defaultResponseCode): Option[String] = {
-    val response = http(req).option.apply()
-    response match {
-      case Some(r) =>
-        if (r.getStatusCode == expectedResponseCode)
-          Some(r.getResponseBody)
-        else {
-          throw new Exception(s"Received unexpected status code: ${r.getStatusCode}, message: ${r.getResponseBody}")
-        }
-      case None =>
-        log.error(s"No response for request: $req")
-        None
+
+  def resolveRequestFut(req: Req, expectedResponseCode: Int = defaultResponseCode): Future[Response] = {
+    http(req) map {
+      response =>
+        if (response.getStatusCode != expectedResponseCode)
+          throw new Exception(s"Received unexpected status code: ${response.getStatusCode}, message: ${response.getResponseBody}")
+        else
+          response
     }
   }
-  def resolveAndDeserialize[T : ClassTag](req: Req, expectedResponseCode: Int = defaultResponseCode): Option[T] = {
-    val jsonOpt = resolveRequest(req, expectedResponseCode)
-    jsonOpt match {
-      case Some(json) =>
+
+  def resolveAndDeserializeFut[T: ClassTag](req: Req, expectedResponseCode: Int = defaultResponseCode): Future[T] = {
+    resolveRequestFut(req, expectedResponseCode) map {
+      response =>
         val tClass = implicitly[ClassTag[T]].runtimeClass
-        val response = Try(mapper.readValue(json, tClass))
-        response match {
-          case Success(v) =>
-            Some(v.asInstanceOf[T])
-          case Failure(e) =>
-            log.error("Failed to parse JSON response", e)
-            None
-        }
-      case None => None
+        val mappedObject = mapper.readValue(response.getResponseBody, tClass)
+        mappedObject.asInstanceOf
     }
   }
 }

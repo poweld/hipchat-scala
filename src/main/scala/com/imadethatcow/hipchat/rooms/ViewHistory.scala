@@ -5,6 +5,8 @@ import Common._
 import com.imadethatcow.hipchat.common.caseclass.{HistoriesResponse, HistoryItem}
 
 import scala.util.{Failure, Success, Try}
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 class ViewHistory(private[this] val apiToken: String) extends Logging {
   def roomHistory(roomIdOrName: Any,
@@ -12,7 +14,7 @@ class ViewHistory(private[this] val apiToken: String) extends Logging {
            timezone: Option[String] = None,
            startIndex: Option[Long] = None,
            maxResults: Option[Long] = None,
-           reverse: Option[Boolean] = None): Option[Seq[HistoryItem]] = {
+           reverse: Option[Boolean] = None): Future[Seq[HistoryItem]] = {
     var req = addToken(ViewHistory.url(roomIdOrName), apiToken)
     for (d <- date) req = req.addQueryParameter("date", d.toString)
     for (tz <- timezone) req = req.addQueryParameter("timezone", tz)
@@ -20,10 +22,8 @@ class ViewHistory(private[this] val apiToken: String) extends Logging {
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (r <- reverse) req = req.addQueryParameter("reverse", r.toString)
 
-    resolveAndDeserialize[HistoriesResponse](req) match {
-      case Some(historiesResponse) =>
-        Some(historiesResponse.items)
-      case None => None
+    resolveAndDeserializeFut[HistoriesResponse](req) map {
+      response => response.items
     }
   }
 }

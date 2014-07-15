@@ -4,6 +4,8 @@ import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.RoomNotification
 import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 class RoomNotifier(private[this] val apiToken: String) extends Logging {
   import MessageFormat._
@@ -12,7 +14,7 @@ class RoomNotifier(private[this] val apiToken: String) extends Logging {
            message: String,
            color: Color = Color.yellow,
            notify: Boolean = false,
-           messageFormat: MessageFormat = MessageFormat.html): Boolean = {
+           messageFormat: MessageFormat = MessageFormat.html): Future[Boolean] = {
     val notification = RoomNotification(color.toString, message, notify, messageFormat.toString)
     // TODO: the following is an ugly hack. "notify" as a reserved name, so we can't use it in the case class
     val body = mapper.writeValueAsString(notification).replaceFirst(""""_notify""", """"notify""")
@@ -20,10 +22,7 @@ class RoomNotifier(private[this] val apiToken: String) extends Logging {
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
-    resolveRequest(req, 204) match {
-      case Some(r) => true
-      case None => false
-    }
+    resolveRequestFut(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 
