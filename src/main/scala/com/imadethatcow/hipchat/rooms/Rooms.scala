@@ -13,6 +13,28 @@ import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 
 class Rooms(private[this] val apiToken: String) extends Logging {
+
+  def create(guest_access: Boolean =false,
+             name: String,
+             owner_user_id: Option[String]=None,
+             privacy : Privacy = Privacy.public   ) = {
+  val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
+    val body = mapper.writeValueAsString(room)
+
+    val req = addToken(Rooms.url.POST, apiToken)
+      .setBody(body)
+      .setHeader("Content-Type", "application/json")
+
+    resolveAndDeserialize[RoomsCreateResponse](req, 201)
+  }
+
+  def delete(roomIdOrName: Any): Boolean = {
+    val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
+    resolveRequest(req, 204) match {
+      case Some(r) => true
+      case None => false
+    }
+  }
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              includeArchived: Option[Boolean] = None): Option[Seq[Room]] = {
@@ -28,6 +50,10 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     }
   }
 
+  /**
+   * @param roomIdOrName
+   * @return
+   */
   def get(roomIdOrName: Any): Option[RoomDetails] = {
     val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
     resolveAndDeserialize[RoomDetails](req)
@@ -72,6 +98,8 @@ private object Rooms {
   }
   def urlPut(roomIdOrName: Any) = url(roomIdOrName).PUT
   def urlGet(roomIdOrName: Any) = url(roomIdOrName).GET
+  def urlDelete(roomIdOrName: Any) = url(roomIdOrName).DELETE
+
 }
 
 
