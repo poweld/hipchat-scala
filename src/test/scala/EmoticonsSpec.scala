@@ -1,6 +1,7 @@
 import com.imadethatcow.hipchat._
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class EmoticonsSpec extends FlatSpec {
   val config = ConfigFactory.load

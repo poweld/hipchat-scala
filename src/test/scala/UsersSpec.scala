@@ -1,7 +1,10 @@
 import com.imadethatcow.hipchat.users.Users
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class UsersSpec extends FlatSpec {
   val config = ConfigFactory.load
@@ -22,15 +25,18 @@ class UsersSpec extends FlatSpec {
     }
 
     it should "return a valid JSON response when specifying start-index" in {
-      users.getAll(startIndex = Some(1L))
+      val fut = users.getAll(startIndex = Some(1L))
+      Await.ready(fut, Duration.Inf)
     }
 
     it should "return a valid JSON response when specifying max-results" in {
-      users.getAll(maxResults = Some(1L))
+      val fut = users.getAll(maxResults = Some(1L))
+      Await.ready(fut, Duration.Inf)
     }
 
     it should "return a valid JSON response when specifying include-guests" in {
-      users.getAll(includeGuests = Some(true))
+      val fut = users.getAll(includeGuests = Some(true))
+      Await.ready(fut, Duration.Inf)
     }
 
     // This will respond with a 403 if not using proper credentials

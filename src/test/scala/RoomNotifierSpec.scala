@@ -3,7 +3,10 @@ import com.imadethatcow.hipchat._
 import com.imadethatcow.hipchat.rooms.RoomNotifier
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class RoomNotifierSpec extends FlatSpec {
   val config = ConfigFactory.load
@@ -19,19 +22,39 @@ class RoomNotifierSpec extends FlatSpec {
     val notifier = new RoomNotifier(apiToken)
 
     "Room notification" should "not fail" in {
-      assert(notifier.sendNotification(room, message))
+      val fut = notifier.sendNotification(room, message)
+      fut.onFailure {
+        case ex: Throwable =>
+          fail(ex)
+      }
+      Await.ready(fut, Duration.Inf)
     }
 
     it should "not fail when specifying a color" in {
-      assert(notifier.sendNotification(room, message, color = Color.random))
+      val fut = notifier.sendNotification(room, message, color = Color.random)
+      fut.onFailure {
+        case ex: Throwable =>
+          fail(ex)
+      }
+      Await.ready(fut, Duration.Inf)
     }
 
     it should "not fail when specifying notify" in {
-      assert(notifier.sendNotification(room, message, notify = true))
+      val fut = notifier.sendNotification(room, message, notify = true)
+      fut.onFailure {
+        case ex: Throwable =>
+          fail(ex)
+      }
+      Await.ready(fut, Duration.Inf)
     }
 
     it should "not fail when specifying message format" in {
-      assert(notifier.sendNotification(room, message, messageFormat = MessageFormat.text))
+      val fut = notifier.sendNotification(room, message, messageFormat = MessageFormat.text)
+      fut.onFailure {
+        case ex: Throwable =>
+          fail(ex)
+      }
+      Await.ready(fut, Duration.Inf)
     }
   }
 }

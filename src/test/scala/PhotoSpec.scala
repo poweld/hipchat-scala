@@ -1,6 +1,9 @@
 import com.imadethatcow.hipchat.users.Photos
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 import scala.util.Try
 
@@ -21,10 +24,10 @@ class PhotoSpec extends FlatSpec with Matchers {
   for (apiToken <- apiTokenTry; email <- emailTry; image <- imageTry) {
     val photo = new Photos(apiToken)
     "Put photo" should "return true" in {
-      photo.update(email, image) shouldEqual true
+      Await.result(photo.update(email, image), Duration.Inf) shouldEqual true
     }
     "Delete photo" should "return true" in {
-      photo.delete(email) shouldEqual true
+      Await.result(photo.delete(email), Duration.Inf) shouldEqual true
     }
   }
 }

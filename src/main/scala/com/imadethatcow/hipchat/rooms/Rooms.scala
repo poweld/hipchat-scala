@@ -11,24 +11,26 @@ import com.imadethatcow.hipchat.common.caseclass.Room
 import scala.Some
 import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
+import scala.concurrent.{ExecutionContext, Future}
+import ExecutionContext.Implicits.global
 
 class Rooms(private[this] val apiToken: String) extends Logging {
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
-             includeArchived: Option[Boolean] = None): Option[Seq[Room]] = {
+             includeArchived: Option[Boolean] = None): Future[Seq[Room]] = {
     var req = addToken(Rooms.url.GET, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (ia <- includeArchived) req = req.addQueryParameter("include-archived", ia.toString)
 
-    resolveAndDeserialize[RoomsResponse](req) match {
-      case Some(roomsResponse) =>
-        Some(roomsResponse.items.map(r => Room(r.id, r.name)).toSeq)
-      case None => None
+    resolveAndDeserialize[RoomsResponse](req) map {
+      response => response.items.map {
+        item => Room(item.id, item.name)
+      }
     }
   }
 
-  def get(roomIdOrName: Any): Option[RoomDetails] = {
+  def get(roomIdOrName: Any): Future[RoomDetails] = {
     val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
     resolveAndDeserialize[RoomDetails](req)
   }
@@ -39,7 +41,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
              newPrivacy: Privacy = Privacy.public,
              newIsArchived: Boolean = false,
              newIsGuestAccessible: Boolean = false,
-             newOwnerIdOrEmail: Option[Any] = None): Boolean = {
+             newOwnerIdOrEmail: Option[Any] = None): Future[Boolean] = {
     if (newOwnerIdOrEmail.isEmpty) log.warn("Hipchat doesn't currently support setting the newOwnerIdOrEmail to None")
     val name = newRoomName.substring(0, Math.min(newRoomName.length, 50)) // Name may only be 50 characters long
     val roomUpdate = RoomUpdate(name, newPrivacy.toString, newIsArchived, newIsGuestAccessible, newTopic, Owner(newOwnerIdOrEmail))
@@ -47,20 +49,16 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     val req = addToken(Rooms.urlPut(roomIdOrName).PUT, apiToken)
       .setBody(json)
       .setHeader("Content-Type", "application/json")
-    resolveRequest(req, 204)
-    true
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 
   def setTopic(roomIdOrName: Any,
-               topic: String) = {
+               topic: String): Future[Boolean] = {
     val topicUrl = (Rooms.url(roomIdOrName) / "topic").PUT
     val req = addToken(topicUrl, apiToken)
       .setBody(writeMapper.writeValueAsString(TopicRequest(topic)))
       .setHeader("Content-Type", "application/json")
-    resolveRequest(req, 204) match {
-      case Some(_) => true
-      case None => false
-    }
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 

@@ -2,7 +2,10 @@ import com.imadethatcow.hipchat._
 import com.imadethatcow.hipchat.users.PrivateMessenger
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PrivateMessengerSpec  extends FlatSpec {
   val config = ConfigFactory.load
@@ -18,10 +21,15 @@ class PrivateMessengerSpec  extends FlatSpec {
 
   for (apiToken <- apiTokenTry; room <- testRoomTry; email <- testEmailTry) {
     val message = "This is an automated private message"
-    val messager = new PrivateMessenger(apiToken)
+    val messenger = new PrivateMessenger(apiToken)
 
     "Private message" should "not fail" in {
-      assert(messager.sendMessage(email, message))
+      val fut = messenger.sendMessage(email, message)
+      fut.onFailure {
+        case ex: Throwable =>
+          fail(ex)
+      }
+      Await.ready(fut, Duration.Inf)
     }
   }
 }

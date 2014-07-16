@@ -1,7 +1,10 @@
 import com.imadethatcow.hipchat.rooms.Rooms
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.Await
 import scala.util.Try
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 class RoomsSpec extends FlatSpec with Matchers {
   val config = ConfigFactory.load
@@ -34,11 +37,14 @@ class RoomsSpec extends FlatSpec with Matchers {
     }
 
     "Room details request" should "Return a valid JSON response" in {
-      println(rooms.get(room))
+      for (roomDetails <- rooms.get(room)) println(roomDetails)
     }
 
     "Set topic request" should "Return true" in {
-      rooms.setTopic(room, "Hello world!") shouldEqual true
+      Await.result(rooms.setTopic(room, "Hello world!"), Duration.Inf) shouldEqual true
+      val fut = rooms.setTopic(room, "Hello world!")
+      val success = Await.result(fut, Duration.Inf)
+      success shouldEqual true
     }
   }
 }
