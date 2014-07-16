@@ -3,16 +3,16 @@ package com.imadethatcow.hipchat
 import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.enums.WebhookEvent
-import dispatch._, Defaults._
+import scala.concurrent.{ExecutionContext, Future}
 import WebhookEvent._
 import com.imadethatcow.hipchat.common.caseclass._
 
-class Webhooks(private[this] val apiToken: String) extends Logging {
+class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def create(roomIdOrName: Any,
              url: String,
              event: WebhookEvent,
              pattern: Option[String] = None,
-             name: Option[String] = None): Option[WebhookCreateResponse] = {
+             name: Option[String] = None): Future[WebhookCreateResponse] = {
     val webhook = WebhookCreateRequest(url, event.toString, pattern, name)
     val body = mapper.writeValueAsString(webhook)
     val req = addToken(Webhooks.urlPost(roomIdOrName), apiToken)
@@ -22,39 +22,32 @@ class Webhooks(private[this] val apiToken: String) extends Logging {
     resolveAndDeserialize[WebhookCreateResponse](req, 201)
   }
   def get(roomIdOrName: Any,
-          webhookId: Long): Option[Webhook] = {
+          webhookId: Long): Future[Webhook] = {
     val req = addToken(Webhooks.urlGet(roomIdOrName, webhookId), apiToken)
 
-    resolveAndDeserialize[WebhookGetItem](req) match {
-      case Some(webhook) =>
-        Some(Webhook(webhook.room, webhook.url, webhook.pattern, webhook.event, webhook.name, webhook.id, webhook.creator))
-      case None => None
+    resolveAndDeserialize[WebhookGetItem](req) map {
+      response => Webhook(response.room, response.url, response.pattern, response.event, response.name, response.id, response.creator)
     }
   }
 
   def getAll(roomIdOrName: Any,
              startIndex: Option[Long] = None,
-             maxResults: Option[Long] = None): Option[Seq[WebhookSimple]] = {
+             maxResults: Option[Long] = None): Future[Seq[WebhookSimple]] = {
     var req = addToken(Webhooks.urlGetAll(roomIdOrName), apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
 
-    resolveAndDeserialize[WebhookGetItems](req) match {
-      case Some(webhookGetItems) =>
-        Some(webhookGetItems.items.map { h =>
-          WebhookSimple(h.url, h.pattern, h.event, h.name, h.id)
-        })
-      case None => None
+    resolveAndDeserialize[WebhookGetItems](req) map {
+      response => response.items.map {
+        item => WebhookSimple(item.url, item.pattern, item.event, item.name, item.id)
+      }
     }
   }
 
-  def delete(roomIdOrName: Any, webhookId: Long): Boolean = {
+  def delete(roomIdOrName: Any, webhookId: Long): Future[Boolean] = {
     val req = addToken(Webhooks.urlDelete(roomIdOrName, webhookId), apiToken)
 
-    resolveRequest(req, 204) match {
-      case Some(r) => true
-      case None => false
-    }
+    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 }
 

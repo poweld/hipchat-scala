@@ -1,6 +1,7 @@
 import com.imadethatcow.hipchat.users.Users
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 
 class UsersSpec extends FlatSpec {
@@ -11,6 +12,8 @@ class UsersSpec extends FlatSpec {
   val testRoomTry = Try(config.getString(TEST_ROOM_KEY))
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
   if (testRoomTry.isFailure) fail("Could not find test_room in config")
+
+  implicit def executionContext = ExecutionContext.Implicits.global
 
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val users = new Users(apiToken)

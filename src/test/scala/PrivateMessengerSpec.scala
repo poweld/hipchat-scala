@@ -2,7 +2,8 @@ import com.imadethatcow.hipchat._
 import com.imadethatcow.hipchat.users.PrivateMessenger
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
-import scala.util.Try
+import scala.concurrent.ExecutionContext
+import scala.util.{Failure, Success, Try}
 
 class PrivateMessengerSpec  extends FlatSpec {
   val config = ConfigFactory.load
@@ -16,12 +17,18 @@ class PrivateMessengerSpec  extends FlatSpec {
   if (testRoomTry.isFailure) fail("Could not find test_room in config")
   if (testEmailTry.isFailure) fail("Could not find test_email in config")
 
+  implicit def executionContext = ExecutionContext.Implicits.global
+
   for (apiToken <- apiTokenTry; room <- testRoomTry; email <- testEmailTry) {
     val message = "This is an automated private message"
     val messager = new PrivateMessenger(apiToken)
 
     "Private message" should "not fail" in {
-      assert(messager.sendMessage(email, message))
+      val sentMessageFut = messager.sendMessage(email, message)
+      sentMessageFut.onComplete {
+        case Success(successful) => assert(successful)
+        case Failure(_) => assert(false)
+      }
     }
   }
 }

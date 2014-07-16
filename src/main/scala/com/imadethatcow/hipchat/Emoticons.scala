@@ -3,26 +3,25 @@ package com.imadethatcow.hipchat
 import com.imadethatcow.hipchat.common.Common._
 import com.imadethatcow.hipchat.common.Logging
 import com.imadethatcow.hipchat.common.caseclass.{EmoticonDetails, Emoticon, EmoticonsResponse}
+import scala.concurrent.{ExecutionContext, Future}
 
-import scala.util.{Failure, Success, Try}
-
-class Emoticons(private[this] val apiToken: String) extends Logging {
+class Emoticons(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
-             `type`: Option[Boolean] = None): Option[Seq[Emoticon]] = {
+             `type`: Option[Boolean] = None): Future[Seq[Emoticon]] = {
     var req = addToken(Emoticons.url, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (t <- `type`) req = req.addQueryParameter("type", t.toString)
 
-    resolveAndDeserialize[EmoticonsResponse](req) match {
-      case Some(emoticonResponse) =>
-        Some(emoticonResponse.items.map(r => Emoticon(r.url, r.id, r.shortcut)).toSeq)
-      case None => None
+    resolveAndDeserialize[EmoticonsResponse](req) map {
+      response => response.items.map {
+        item => Emoticon(item.url, item.id, item.shortcut)
+      }.toSeq
     }
   }
 
-  def get(emoticonIdOrKey: Any): Option[EmoticonDetails] = {
+  def get(emoticonIdOrKey: Any): Future[EmoticonDetails] = {
     val req = addToken(Emoticons.url(emoticonIdOrKey), apiToken)
     resolveAndDeserialize[EmoticonDetails](req)
   }

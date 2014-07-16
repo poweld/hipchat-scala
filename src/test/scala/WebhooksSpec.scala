@@ -2,7 +2,8 @@ import com.imadethatcow.hipchat._
 import com.imadethatcow.hipchat.common.enums.WebhookEvent
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
-import scala.util.Try
+import scala.concurrent.ExecutionContext
+import scala.util.{Failure, Success, Try}
 
 class WebhooksSpec extends FlatSpec {
   val config = ConfigFactory.load
@@ -13,8 +14,10 @@ class WebhooksSpec extends FlatSpec {
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
   if (testRoomTry.isFailure) fail("Could not find test_room in config")
 
+  implicit def executionContext = ExecutionContext.Implicits.global
+
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
-		val url = "http://www.imadethatcow.com"
+    val url = "http://www.imadethatcow.com"
     val webhooks = new Webhooks(apiToken)
     val event = WebhookEvent.room_message
 
@@ -22,24 +25,27 @@ class WebhooksSpec extends FlatSpec {
       for (hookResponse <- webhooks.create(room, url, event)) {
         val id = hookResponse.id
 
-        val hookOpt = webhooks.get(room, id)
-        if (hookOpt.isDefined)
-          println(hookOpt.get)
-        else
-          fail("Did not receive a valid hook from get request")
+        webhooks.get(room, id).onComplete {
+          case Success(hook) => println(hook)
+          case Failure(_) => fail("Did not receive a valid hook from get request")
+        }
 
         println(s"Deleting webhook id $id")
-        assert(webhooks.delete(room, id))
+
+        webhooks.delete(room, id).onComplete {
+          case Success(successful) => assert(successful)
+          case Failure(_) => fail("Did not delete the webhook")
+        }
       }
     }
 
     "Webhook get all request" should "return a valid JSON response" in {
-      val hooks = webhooks.getAll(room)
-      if (hooks.isDefined)
-        for (hook <- hooks)
-          println(hook)
-      else
-        fail("Did not receive a valid hook from get request")
+      webhooks.getAll(room).onComplete {
+        case Success(hooks) =>
+          for (hook <- hooks)
+            println(hook)
+        case Failure(_) => fail("Did not receive a valid hook from get request")
+      }
     }
   }
 }

@@ -1,7 +1,9 @@
-import com.imadethatcow.hipchat._
+import com.imadethatcow.hipchat.Auth
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
-import scala.util.Try
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
+import scala.util.{Success, Failure, Try}
 import com.imadethatcow.hipchat.common.enums.Scope._
 
 class AuthSpec extends FlatSpec with Matchers {
@@ -12,6 +14,8 @@ class AuthSpec extends FlatSpec with Matchers {
   val PASSWORD = "com.imadethatcow.hipchat.test_password"
   val apiTokenTry = Try(config.getString(API_TOKEN_KEY))
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
+
+  implicit def executionContext = ExecutionContext.Implicits.global
 
   for (apiToken <- apiTokenTry) {
     val auth = new Auth(apiToken)
@@ -42,9 +46,9 @@ class AuthSpec extends FlatSpec with Matchers {
     }
     */
     "Auth get session" should "return a valid JSON response" in {
-      for (sessionResponse <- auth.getSession(apiToken)) {
-        println(sessionResponse)
-      }
+      val tokenFut = auth.getSession(apiToken)
+      val token = Await.result(tokenFut, Duration(5, "second"))
+      println(token)
     }
     //"Auth delete session" should "return true" in {
     //  auth.deleteSession(apiToken) shouldEqual true

@@ -1,6 +1,7 @@
 import com.imadethatcow.hipchat._
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.ExecutionContext
 
 class EmoticonsSpec extends FlatSpec {
   val config = ConfigFactory.load
@@ -10,6 +11,8 @@ class EmoticonsSpec extends FlatSpec {
   val testRoomTry = Option(config.getString(TEST_ROOM_KEY))
   if (apiTokenTry.isEmpty) fail("Could not find api_token in config")
   if (testRoomTry.isEmpty) fail("Could not find test_room in config")
+
+  implicit def executionContext = ExecutionContext.Implicits.global
 
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val emoticons = new Emoticons(apiToken)
