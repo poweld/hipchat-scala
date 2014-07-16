@@ -4,9 +4,8 @@ import com.imadethatcow.hipchat.common.Common
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.Photo
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class Photos(private[this] val apiToken: String) {
+class Photos(private[this] val apiToken: String)(implicit executor: ExecutionContext) {
   def update(idOrEmail: String, encodedPhoto: String): Future[Boolean] = {
     val req = addToken(Photos.urlPut(idOrEmail), apiToken)
       .setBody(mapper.writeValueAsString(Photo(encodedPhoto)))

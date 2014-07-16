@@ -4,9 +4,8 @@ import com.imadethatcow.hipchat.common.{Logging, Common}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass.PrivateMessage
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class PrivateMessenger(private[this] val apiToken: String) extends Logging {
+class PrivateMessenger(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def sendMessage(idOrEmail: String, message: String): Future[Boolean] = {
     val req = addToken(PrivateMessenger.url(idOrEmail), apiToken)
       .setBody(mapper.writeValueAsString(PrivateMessage(message)))

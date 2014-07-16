@@ -4,9 +4,8 @@ import com.imadethatcow.hipchat.common.Common._
 import com.imadethatcow.hipchat.common.Logging
 import com.imadethatcow.hipchat.common.caseclass.{EmoticonDetails, Emoticon, EmoticonsResponse}
 import scala.concurrent.{ExecutionContext, Future}
-import ExecutionContext.Implicits.global
 
-class Emoticons(private[this] val apiToken: String) extends Logging {
+class Emoticons(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              `type`: Option[Boolean] = None): Future[Seq[Emoticon]] = {

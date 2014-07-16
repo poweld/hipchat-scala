@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala._
 import com.typesafe.config.ConfigFactory
-import dispatch.Defaults._
 import dispatch._
 import org.slf4j.LoggerFactory
+import scala.concurrent.ExecutionContext
 import scala.reflect.ClassTag
 import scala.util.{Success, Failure, Try}
 import com.ning.http.client.Response
@@ -36,7 +36,7 @@ object Common extends Logging with Config {
 
   def addToken(req: Req, token: String): Req = req.addQueryParameter("auth_token", token.toString)
 
-  def resolveRequest(req: Req, expectedResponseCode: Int = defaultResponseCode): Future[Response] = {
+  def resolveRequest(req: Req, expectedResponseCode: Int = defaultResponseCode)(implicit executor: ExecutionContext): Future[Response] = {
     http(req) map {
       response =>
         if (response.getStatusCode != expectedResponseCode)
@@ -46,7 +46,7 @@ object Common extends Logging with Config {
     }
   }
 
-  def resolveAndDeserialize[T: ClassTag](req: Req, expectedResponseCode: Int = defaultResponseCode): Future[T] = {
+  def resolveAndDeserialize[T](req: Req, expectedResponseCode: Int = defaultResponseCode)(implicit executor: ExecutionContext, classTag: ClassTag[T]): Future[T] = {
     resolveRequest(req, expectedResponseCode) map {
       response =>
         val tClass = implicitly[ClassTag[T]].runtimeClass
