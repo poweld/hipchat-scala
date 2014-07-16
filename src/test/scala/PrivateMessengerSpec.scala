@@ -7,7 +7,7 @@ import scala.concurrent.duration.Duration
 import scala.util.Try
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class PrivateMessengerSpec  extends FlatSpec {
+class PrivateMessengerSpec extends FlatSpec with Matchers {
   val config = ConfigFactory.load
   val API_TOKEN_KEY = "com.imadethatcow.hipchat.auth_token"
   val TEST_ROOM_KEY = "com.imadethatcow.hipchat.test_room"
@@ -25,11 +25,7 @@ class PrivateMessengerSpec  extends FlatSpec {
 
     "Private message" should "not fail" in {
       val fut = messenger.sendMessage(email, message)
-      fut.onFailure {
-        case ex: Throwable =>
-          fail(ex)
-      }
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf) shouldEqual true
     }
   }
 }

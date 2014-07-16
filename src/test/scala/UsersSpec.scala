@@ -26,17 +26,17 @@ class UsersSpec extends FlatSpec {
 
     it should "return a valid JSON response when specifying start-index" in {
       val fut = users.getAll(startIndex = Some(1L))
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
 
     it should "return a valid JSON response when specifying max-results" in {
       val fut = users.getAll(maxResults = Some(1L))
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
 
     it should "return a valid JSON response when specifying include-guests" in {
       val fut = users.getAll(includeGuests = Some(true))
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
 
     // This will respond with a 403 if not using proper credentials

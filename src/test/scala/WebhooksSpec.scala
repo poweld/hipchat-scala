@@ -27,37 +27,17 @@ class WebhooksSpec extends FlatSpec {
         val id = hookResponse.id
 
         val hookFut = webhooks.get(room, id)
-        hookFut.onFailure {
-          case ex: Throwable =>
-            fail("Did not receive a valid hook from get request")
-        }
-        hookFut.onSuccess {
-          case hook: Webhook =>
-            println(hook)
-        }
-        Await.ready(hookFut, Duration.Inf)
+        println(Await.result(hookFut, Duration.Inf))
 
         println(s"Deleting webhook id $id")
         val deleteFut = webhooks.delete(room, id)
-        deleteFut.onFailure {
-          case ex: Throwable =>
-            fail(ex)
-        }
-        Await.ready(deleteFut, Duration.Inf)
+        Await.result(deleteFut, Duration.Inf)
       }
     }
 
     "Webhook get all request" should "return a valid JSON response" in {
       val hooks = webhooks.getAll(room)
-      hooks.onFailure {
-        case ex: Throwable =>
-          fail(ex)
-      }
-      hooks.onSuccess {
-        case h =>
-          println(h)
-      }
-      Await.ready(hooks, Duration.Inf)
+      println(Await.result(hooks, Duration.Inf))
     }
   }
 }

@@ -23,38 +23,22 @@ class RoomNotifierSpec extends FlatSpec {
 
     "Room notification" should "not fail" in {
       val fut = notifier.sendNotification(room, message)
-      fut.onFailure {
-        case ex: Throwable =>
-          fail(ex)
-      }
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
 
     it should "not fail when specifying a color" in {
       val fut = notifier.sendNotification(room, message, color = Color.random)
-      fut.onFailure {
-        case ex: Throwable =>
-          fail(ex)
-      }
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
 
     it should "not fail when specifying notify" in {
       val fut = notifier.sendNotification(room, message, notify = true)
-      fut.onFailure {
-        case ex: Throwable =>
-          fail(ex)
-      }
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
 
     it should "not fail when specifying message format" in {
       val fut = notifier.sendNotification(room, message, messageFormat = MessageFormat.text)
-      fut.onFailure {
-        case ex: Throwable =>
-          fail(ex)
-      }
-      Await.ready(fut, Duration.Inf)
+      Await.result(fut, Duration.Inf)
     }
   }
 }
