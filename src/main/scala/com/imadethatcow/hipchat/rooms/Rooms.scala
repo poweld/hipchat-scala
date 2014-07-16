@@ -35,6 +35,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
       case None => false
     }
   }
+  
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              includeArchived: Option[Boolean] = None): Option[Seq[Room]] = {

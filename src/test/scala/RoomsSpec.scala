@@ -19,14 +19,13 @@ class RoomsSpec extends FlatSpec with Matchers {
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val rooms = new Rooms(apiToken)
 
-    val guest_access = true;
-    val name = "Hello dude2";
+    val guest_access = true
+    val name = "Hello dude2"
 
     "Room create request" should "return a valid JSON response" in {
       for (roomResponse <- rooms.create(guest_access,name,privacy= Privacy.`private` )) {
 
         val id = roomResponse.id
-
         val roomOpt = rooms.get(id)
         if (roomOpt.isDefined)
           println(roomOpt.get)
