@@ -47,11 +47,8 @@ class AuthSpec extends FlatSpec with Matchers {
     */
     "Auth get session" should "return a valid JSON response" in {
       val tokenFut = auth.getSession(apiToken)
-      try {
-        Await.ready(tokenFut, Duration(5, "second"))
-      } catch {
-        case e:Exception => fail(s"Could not get auth session: ${e.getMessage}")
-      }
+      val token = Await.result(tokenFut, Duration(5, "second"))
+      println(token)
     }
     //"Auth delete session" should "return true" in {
     //  auth.deleteSession(apiToken) shouldEqual true
