@@ -20,6 +20,7 @@ class RoomsSpec extends FlatSpec with Matchers {
 
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val rooms = new Rooms(apiToken)
+<<<<<<< HEAD
 
     "Room create/delete request" should "return a valid JSON response" in {
       val guest_access = true
@@ -34,6 +35,24 @@ class RoomsSpec extends FlatSpec with Matchers {
       } yield deletedSuccessfully
       val successful = Await.result(createDeleteFut, Duration.Inf)
       assert(successful)
+=======
+    val guest_access = true
+    val name = java.util.UUID.randomUUID.toString()
+
+    "Room create request" should "return a valid JSON response" in {
+      for (roomResponse <- rooms.create(guest_access, name, privacy = Privacy.`private`)) {
+        val id = roomResponse.id
+        val roomOpt = rooms.get(id)
+        if (roomOpt.isDefined)
+          println(roomOpt.get)
+        else
+          fail("Did not receive a valid room from get request")
+
+        println(s"Deleting room id $id")// test delete
+        assert(rooms.delete(id))
+      }
+    }
+>>>>>>> completed create, delete room and respective tests
 
     "Rooms request" should "return a valid JSON response" in {
       for (seq <- rooms.getAll(); room <- seq) {

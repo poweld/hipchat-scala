@@ -21,7 +21,6 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     val req = addToken(Rooms.url.POST, apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
-
     resolveAndDeserialize[RoomsCreateResponse](req, 201)
   }
 
