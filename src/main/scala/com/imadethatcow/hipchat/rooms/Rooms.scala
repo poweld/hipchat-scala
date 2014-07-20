@@ -18,11 +18,12 @@ class Rooms(private[this] val apiToken: String) extends Logging {
              name: String,
              owner_user_id: Option[String] = None,
              privacy : Privacy = Privacy.public) = {
-  val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
+    val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
     val body = mapper.writeValueAsString(room)
     val req = addToken(Rooms.url.POST, apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
+
     resolveAndDeserialize[RoomsCreateResponse](req, 201)
   }
 
