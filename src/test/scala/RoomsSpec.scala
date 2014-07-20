@@ -18,7 +18,6 @@ class RoomsSpec extends FlatSpec with Matchers {
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
   if (testRoomTry.isFailure) fail("Could not find test_room in config")
 
-
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val rooms = new Rooms(apiToken)
 
@@ -35,8 +34,6 @@ class RoomsSpec extends FlatSpec with Matchers {
       } yield deletedSuccessfully
       val successful = Await.result(createDeleteFut, Duration.Inf)
       assert(successful)
-    }
-    
 
     "Rooms request" should "return a valid JSON response" in {
       for (seq <- rooms.getAll(); room <- seq) {
