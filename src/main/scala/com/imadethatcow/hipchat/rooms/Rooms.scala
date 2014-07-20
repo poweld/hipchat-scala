@@ -13,18 +13,19 @@ import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 
 class Rooms(private[this] val apiToken: String) extends Logging {
-  def create(guest_access: Boolean =false,
+
+  def create(guest_access: Boolean = false,
              name: String,
-             owner_user_id: Option[String]=None,
-             privacy : Privacy = Privacy.public   ) = {
+             owner_user_id: Option[String] = None,
+             privacy : Privacy = Privacy.public) = {
   val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
     val body = mapper.writeValueAsString(room)
     val req = addToken(Rooms.url.POST, apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
-
     resolveAndDeserialize[RoomsCreateResponse](req, 201)
   }
+
   def delete(roomIdOrName: Any): Boolean = {
     val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
     resolveRequest(req, 204) match {

@@ -21,7 +21,7 @@ class RoomsSpec extends FlatSpec with Matchers {
     val name = java.util.UUID.randomUUID.toString()
 
     "Room create request" should "return a valid JSON response" in {
-      for (roomResponse <- rooms.create(guest_access,name,privacy= Privacy.`private` )) {
+      for (roomResponse <- rooms.create(guest_access, name, privacy = Privacy.`private`)) {
         val id = roomResponse.id
         val roomOpt = rooms.get(id)
         if (roomOpt.isDefined)
