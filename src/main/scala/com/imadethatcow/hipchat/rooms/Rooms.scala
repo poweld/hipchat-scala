@@ -13,7 +13,6 @@ import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 
 class Rooms(private[this] val apiToken: String) extends Logging {
-
   def create(guest_access: Boolean =false,
              name: String,
              owner_user_id: Option[String]=None,
@@ -26,7 +25,6 @@ class Rooms(private[this] val apiToken: String) extends Logging {
 
     resolveAndDeserialize[RoomsCreateResponse](req, 201)
   }
-
   def delete(roomIdOrName: Any): Boolean = {
     val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
     resolveRequest(req, 204) match {
@@ -50,10 +48,6 @@ class Rooms(private[this] val apiToken: String) extends Logging {
     }
   }
 
-  /**
-   * @param roomIdOrName
-   * @return
-   */
   def get(roomIdOrName: Any): Option[RoomDetails] = {
     val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
     resolveAndDeserialize[RoomDetails](req)

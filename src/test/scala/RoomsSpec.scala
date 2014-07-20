@@ -15,16 +15,13 @@ class RoomsSpec extends FlatSpec with Matchers {
   if (apiTokenTry.isFailure) fail("Could not find api_token in config")
   if (testRoomTry.isFailure) fail("Could not find test_room in config")
 
-
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val rooms = new Rooms(apiToken)
-
     val guest_access = true
-    val name = "Hello dude2"
+    val name = java.util.UUID.randomUUID.toString()
 
     "Room create request" should "return a valid JSON response" in {
       for (roomResponse <- rooms.create(guest_access,name,privacy= Privacy.`private` )) {
-
         val id = roomResponse.id
         val roomOpt = rooms.get(id)
         if (roomOpt.isDefined)
@@ -36,7 +33,6 @@ class RoomsSpec extends FlatSpec with Matchers {
         assert(rooms.delete(id))
       }
     }
-    
 
     "Rooms request" should "return a valid JSON response" in {
       for (seq <- rooms.getAll(); room <- seq) {
