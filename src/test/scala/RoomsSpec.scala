@@ -36,6 +36,7 @@ class RoomsSpec extends FlatSpec with Matchers {
       val successful = Await.result(createDeleteFut, Duration.Inf)
       assert(successful)
     }
+    
 
     "Rooms request" should "return a valid JSON response" in {
       for (seq <- rooms.getAll(); room <- seq) {
