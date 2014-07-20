@@ -10,6 +10,7 @@ case class RoomsResponse(items: Seq[RoomsItem], startIndex: Long, maxResults: Lo
 case class RoomsCreateResponse(id: Long, links: RoomDetailsStatsLinks)
 case class RoomsCreateRequest(guest_access: Boolean, name: String,owner_user_id: Option[String], privacy: String)
 
+
 case class RoomDetailsStatsLinks(self: String)
 case class RoomDetailsStats(links: RoomDetailsStatsLinks)
 case class RoomDetailsLinks(self: String, webhooks: String, members: String)

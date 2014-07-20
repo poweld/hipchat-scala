@@ -36,6 +36,7 @@ class RoomsSpec extends FlatSpec with Matchers {
         assert(rooms.delete(id))
       }
     }
+    
 
     "Rooms request" should "return a valid JSON response" in {
       for (seq <- rooms.getAll(); room <- seq) {

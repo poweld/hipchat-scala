@@ -20,7 +20,6 @@ class Rooms(private[this] val apiToken: String) extends Logging {
              privacy : Privacy = Privacy.public   ) = {
   val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
     val body = mapper.writeValueAsString(room)
-
     val req = addToken(Rooms.url.POST, apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
@@ -35,7 +34,7 @@ class Rooms(private[this] val apiToken: String) extends Logging {
       case None => false
     }
   }
-  
+
   def getAll(startIndex: Option[Long] = None,
              maxResults: Option[Long] = None,
              includeArchived: Option[Boolean] = None): Option[Seq[Room]] = {
