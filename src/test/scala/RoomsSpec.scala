@@ -1,3 +1,6 @@
+import com.imadethatcow.hipchat._
+import com.imadethatcow.hipchat.common.caseclass.User
+import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.rooms.Rooms
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
@@ -17,6 +20,18 @@ class RoomsSpec extends FlatSpec with Matchers {
 
   for (apiToken <- apiTokenTry; room <- testRoomTry) {
     val rooms = new Rooms(apiToken)
+
+    "Room create/delete request" should "return a valid JSON response" in {
+      val name = "TestRoom" + System.currentTimeMillis
+
+      val createFut = rooms.create(name)
+      val createdRoom = Await.result(createFut, Duration.Inf)
+      println(s"Created test room: $name, id: ${createdRoom.id}")
+
+      val deleteRoomFut = rooms.delete(createdRoom.id)
+      println(s"Deleting the test room")
+      Await.result(deleteRoomFut, Duration.Inf) shouldEqual true
+    }
 
     "Rooms request" should "return a valid JSON response" in {
       for (seq <- rooms.getAll(); room <- seq) {

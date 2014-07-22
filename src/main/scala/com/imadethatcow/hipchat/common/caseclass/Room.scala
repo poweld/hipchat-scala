@@ -1,11 +1,13 @@
 package com.imadethatcow.hipchat.common.caseclass
+import com.imadethatcow.hipchat.common.enums.Privacy._
 
 case class Room(id: Long, name: String)
 case class RoomsItem(id: Long, links: RoomsItemLinks, name: String)
 case class RoomsItemLinks(self: String, webhooks: String, members: Option[String])
 case class RoomsLinks(self: String, prev: Option[String], next: Option[String])
 case class RoomsResponse(items: Seq[RoomsItem], startIndex: Long, maxResults: Long, links: RoomsLinks)
-
+case class RoomsCreateResponse(id: Long, links: RoomDetailsStatsLinks)
+case class RoomsCreateRequest(guest_access: Boolean, name: String, owner_user_id: Option[String], privacy: String)
 case class RoomDetailsStatsLinks(self: String)
 case class RoomDetailsStats(links: RoomDetailsStatsLinks)
 case class RoomDetailsLinks(self: String, webhooks: String, members: String)
