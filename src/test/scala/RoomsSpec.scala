@@ -22,18 +22,15 @@ class RoomsSpec extends FlatSpec with Matchers {
     val rooms = new Rooms(apiToken)
 
     "Room create/delete request" should "return a valid JSON response" in {
-      val guest_access = true
-      val name =  java.util.UUID.randomUUID().toString
+      val name = "TestRoom" + System.currentTimeMillis
 
-      val createDeleteFut = for {
-        roomResponse <- rooms.create(guest_access, name, privacy = Privacy.`private`)
-        id = roomResponse.id
-        roomDetails <- rooms.get(id)
-        _ = println(s"Deleting room id $id")
-        deletedSuccessfully <- rooms.delete(id)
-      } yield deletedSuccessfully
-      val successful = Await.result(createDeleteFut, Duration.Inf)
-      assert(successful)
+      val createFut = rooms.create(name)
+      val createdRoom = Await.result(createFut, Duration.Inf)
+      println(s"Created test room: $name, id: ${createdRoom.id}")
+
+      val deleteRoomFut = rooms.delete(createdRoom.id)
+      println(s"Deleting the test room")
+      Await.result(deleteRoomFut, Duration.Inf) shouldEqual true
     }
 
     "Rooms request" should "return a valid JSON response" in {

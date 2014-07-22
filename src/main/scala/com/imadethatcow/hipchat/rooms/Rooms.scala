@@ -12,11 +12,11 @@ import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 import scala.concurrent.{ExecutionContext, Future}
 
 class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def create(guest_access: Boolean = false,
-             name: String,
-             owner_user_id: Option[String] = None,
+  def create(name: String,
+             ownerIdEmailOrMentionName: Option[String] = None,
+             guestAccess: Boolean = false,
              privacy : Privacy = Privacy.public): Future[RoomsCreateResponse] = {
-    val room = RoomsCreateRequest(guest_access, name, owner_user_id, privacy.toString)
+    val room = RoomsCreateRequest(guestAccess, name, ownerIdEmailOrMentionName, privacy.toString)
     val body = mapper.writeValueAsString(room)
     val req = addToken(Rooms.url.POST, apiToken)
       .setBody(body)
