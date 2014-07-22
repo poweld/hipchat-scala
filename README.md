@@ -33,7 +33,7 @@ Emoticons
 
 Rooms
 -----
-* Get all rooms (**Rooms**)
+* Get all rooms
 * Send room notification
 * Set topic
 * Create webhook
@@ -42,6 +42,8 @@ Rooms
 * Get webhook
 * View history
 * Update room
+* Create room
+* Delete room
 
 User
 ----
@@ -62,9 +64,7 @@ Capabilities
 
 Rooms
 -----
-* Create room
 * Send room notification redirect
-* Delete room
 * Get room statistics
 * Get all members
 * Add member
