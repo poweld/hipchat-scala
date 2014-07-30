@@ -25,39 +25,39 @@ class EmoticonsSpec extends FlatSpec with Matchers {
 
     it should "return a valid JSON response when specifying start-index" in {
       for {
-        theEmoticons <- emoticons.getAll(startIndex = 2)
+        theEmoticons <- emoticons.getAll(startIndex = Some(2))
         emoticonTwo <- emoticons.get(2)
       } yield theEmoticons.head shouldEqual emoticonTwo
     }
 
     it should "return a valid JSON response when specifying max-results" in {
       for {
-        theEmoticons <- emoticons.getAll(maxResults = 1)
+        theEmoticons <- emoticons.getAll(maxResults = Some(1))
         emoticonZero <- emoticons.get(0)
       } yield theEmoticons.head shouldEqual emoticonZero
     }
 
     it should "return a valid JSON response when specifying type" in {
-      val emoticonsFut = emoticons.getAll(`type` = EmoticonType.all)
+      val emoticonsFut = emoticons.getAll(`type` = Some(EmoticonType.all))
       val allEmoticons = Await.result(emoticonsFut, Duration.Inf)
       allEmoticons.size shouldEqual 100
     }
 
     it should "return a valid JSON response when specifying a large start index" in {
-      val emoticonsFut = emoticons.getAll(startIndex = Int.MaxValue)
+      val emoticonsFut = emoticons.getAll(startIndex = Some(Int.MaxValue))
       val allEmoticons = Await.result(emoticonsFut, Duration.Inf)
       allEmoticons.size shouldEqual 0
     }
 
     it should "return a valid JSON response when specifying zero max-results" in {
-      val emoticonsFut = emoticons.getAll(maxResults = 0)
+      val emoticonsFut = emoticons.getAll(maxResults = Some(0))
       val allEmoticons = Await.result(emoticonsFut, Duration.Inf)
       allEmoticons.size shouldEqual 100
     }
 
     it should "return an exception when getting max-results > 100" in {
       intercept[IllegalArgumentException] {
-        val emoticonsFut = emoticons.getAll(maxResults = 101)
+        val emoticonsFut = emoticons.getAll(maxResults = Some(101))
         Await.result(emoticonsFut, Duration.Inf)
       }
     }

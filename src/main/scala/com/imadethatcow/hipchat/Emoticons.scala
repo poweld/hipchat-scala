@@ -10,15 +10,21 @@ import com.imadethatcow.hipchat.common.enums.EmoticonType
 import com.imadethatcow.hipchat.common.enums.EmoticonType.EmoticonType
 
 class Emoticons(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def getAll(startIndex: Int = 0,
-             maxResults: Int = 100,
-             `type`: EmoticonType = EmoticonType.all): Future[Seq[Emoticon]] = {
-    if (startIndex < 0) throw new IllegalArgumentException("startIndex must be greater than 0")
-    if (maxResults < 0 || maxResults > 100) throw new IllegalArgumentException("maxResults range: 0-100")
+  def getAll(startIndex: Option[Int] = None,
+             maxResults: Option[Int] = None,
+             `type`: Option[EmoticonType] = None): Future[Seq[Emoticon]] = {
+
     var req = addToken(Emoticons.url, apiToken)
-    req = req.addQueryParameter("start-index", startIndex.toString)
-    req = req.addQueryParameter("max-results", maxResults.toString)
-    req = req.addQueryParameter("type", `type`.toString)
+
+    for (si <- startIndex) {
+      if (si < 0) throw new IllegalArgumentException("startIndex must be greater than 0")
+      req = req.addQueryParameter("start-index", si.toString)
+    }
+    for (mr <- maxResults) {
+      if (mr < 0 || mr > 100) throw new IllegalArgumentException("maxResults range: 0-100")
+      req = req.addQueryParameter("max-results", mr.toString)
+    }
+    for (t <- `type`) req = req.addQueryParameter("type", t.toString)
 
     resolveAndDeserialize[EmoticonsResponse](req) map {
       response => response.items.map {
