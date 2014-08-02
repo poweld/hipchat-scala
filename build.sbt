@@ -1,4 +1,4 @@
-name := "HipchatAPI"
+name := "hipchat-scala"
 
 version := "0.1"
 
