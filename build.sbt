@@ -1,6 +1,24 @@
 name := "hipchat-scala"
 
+organization := "com.imadethatcow"
+
 version := "0.1"
+
+publishMavenStyle := true
+
+publishTo := {
+	val nexus = "https://oss.sonatype.org/"
+	if (isSnapshot.value)
+		Some("snapshots" at nexus + "content/repositories/snapshots")
+	else
+		Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+publishArtifact in Test := false
+
+licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
+
+homepage := Some(url("https://github.com/poweld"))
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.2",
