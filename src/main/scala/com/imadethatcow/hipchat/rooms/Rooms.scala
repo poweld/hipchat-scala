@@ -12,10 +12,12 @@ import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
 import scala.concurrent.{ExecutionContext, Future}
 
 class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def create(name: String,
-             ownerIdEmailOrMentionName: Option[String] = None,
-             guestAccess: Boolean = false,
-             privacy : Privacy = Privacy.public): Future[RoomsCreateResponse] = {
+  def create(
+    name:                      String,
+    ownerIdEmailOrMentionName: Option[String] = None,
+    guestAccess:               Boolean        = false,
+    privacy:                   Privacy        = Privacy.public
+  ): Future[RoomsCreateResponse] = {
     val room = RoomsCreateRequest(guestAccess, name, ownerIdEmailOrMentionName, privacy.toString)
     val body = mapper.writeValueAsString(room)
     val req = addToken(Rooms.url.POST, apiToken)
@@ -26,21 +28,24 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
 
   def delete(roomIdOrName: String): Future[Boolean] = {
     val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
-    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false }
+    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
   }
 
-  def getAll(startIndex: Option[Long] = None,
-             maxResults: Option[Long] = None,
-             includeArchived: Option[Boolean] = None): Future[Seq[Room]] = {
+  def getAll(
+    startIndex:      Option[Long]    = None,
+    maxResults:      Option[Long]    = None,
+    includeArchived: Option[Boolean] = None
+  ): Future[Seq[Room]] = {
     var req = addToken(Rooms.url.GET, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (ia <- includeArchived) req = req.addQueryParameter("include-archived", ia.toString)
 
     resolveAndDeserialize[RoomsResponse](req) map {
-      response => response.items.map {
-        item => Room(item.id, item.name)
-      }
+      response =>
+        response.items.map {
+          item => Room(item.id, item.name)
+        }
     }
   }
 
@@ -49,13 +54,15 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     resolveAndDeserialize[RoomDetails](req)
   }
 
-  def update(roomIdOrName: String,
-             newRoomName: String,
-             newTopic: String,
-             newPrivacy: Privacy = Privacy.public,
-             newIsArchived: Boolean = false,
-             newIsGuestAccessible: Boolean = false,
-             newOwnerIdOrEmail: Option[Any] = None): Future[Boolean] = {
+  def update(
+    roomIdOrName:         String,
+    newRoomName:          String,
+    newTopic:             String,
+    newPrivacy:           Privacy     = Privacy.public,
+    newIsArchived:        Boolean     = false,
+    newIsGuestAccessible: Boolean     = false,
+    newOwnerIdOrEmail:    Option[Any] = None
+  ): Future[Boolean] = {
     if (newOwnerIdOrEmail.isEmpty) log.warn("Hipchat doesn't currently support setting the newOwnerIdOrEmail to None")
     val name = newRoomName.substring(0, Math.min(newRoomName.length, 50)) // Name may only be 50 characters long
     val roomUpdate = RoomUpdate(name, newPrivacy.toString, newIsArchived, newIsGuestAccessible, newTopic, Owner(newOwnerIdOrEmail))
@@ -63,16 +70,18 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     val req = addToken(Rooms.urlPut(roomIdOrName).PUT, apiToken)
       .setBody(json)
       .setHeader("Content-Type", "application/json")
-    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
   }
 
-  def setTopic(roomIdOrName: String,
-               topic: String): Future[Boolean] = {
+  def setTopic(
+    roomIdOrName: String,
+    topic:        String
+  ): Future[Boolean] = {
     val topicUrl = (Rooms.url(roomIdOrName) / "topic").PUT
     val req = addToken(topicUrl, apiToken)
       .setBody(writeMapper.writeValueAsString(TopicRequest(topic)))
       .setHeader("Content-Type", "application/json")
-    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
   }
 }
 

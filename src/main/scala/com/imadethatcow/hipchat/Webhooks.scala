@@ -8,11 +8,13 @@ import WebhookEvent._
 import com.imadethatcow.hipchat.common.caseclass._
 
 class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def create(roomIdOrName: String,
-             url: String,
-             event: WebhookEvent,
-             pattern: Option[String] = None,
-             name: Option[String] = None): Future[WebhookCreateResponse] = {
+  def create(
+    roomIdOrName: String,
+    url:          String,
+    event:        WebhookEvent,
+    pattern:      Option[String] = None,
+    name:         Option[String] = None
+  ): Future[WebhookCreateResponse] = {
     val webhook = WebhookCreateRequest(url, event.toString, pattern, name)
     val body = mapper.writeValueAsString(webhook)
     val req = addToken(Webhooks.urlPost(roomIdOrName), apiToken)
@@ -21,8 +23,10 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
 
     resolveAndDeserialize[WebhookCreateResponse](req, 201)
   }
-  def get(roomIdOrName: String,
-          webhookId: Long): Future[Webhook] = {
+  def get(
+    roomIdOrName: String,
+    webhookId:    Long
+  ): Future[Webhook] = {
     val req = addToken(Webhooks.urlGet(roomIdOrName, webhookId), apiToken)
 
     resolveAndDeserialize[WebhookGetItem](req) map {
@@ -30,24 +34,27 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
     }
   }
 
-  def getAll(roomIdOrName: String,
-             startIndex: Option[Long] = None,
-             maxResults: Option[Long] = None): Future[Seq[WebhookSimple]] = {
+  def getAll(
+    roomIdOrName: String,
+    startIndex:   Option[Long] = None,
+    maxResults:   Option[Long] = None
+  ): Future[Seq[WebhookSimple]] = {
     var req = addToken(Webhooks.urlGetAll(roomIdOrName), apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
 
     resolveAndDeserialize[WebhookGetItems](req) map {
-      response => response.items.map {
-        item => WebhookSimple(item.url, item.pattern, item.event, item.name, item.id)
-      }
+      response =>
+        response.items.map {
+          item => WebhookSimple(item.url, item.pattern, item.event, item.name, item.id)
+        }
     }
   }
 
   def delete(roomIdOrName: String, webhookId: Long): Future[Boolean] = {
     val req = addToken(Webhooks.urlDelete(roomIdOrName, webhookId), apiToken)
 
-    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
   }
 }
 

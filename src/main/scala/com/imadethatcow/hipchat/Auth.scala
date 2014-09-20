@@ -24,11 +24,15 @@ class Auth(private[this] val apiToken: String)(implicit executor: ExecutionConte
     resolveAndDeserialize[AuthResponse](req)
   }
 
-  def genPasswordToken(username: String,
-                       password: String,
-                       scopes: Seq[Scope]): Future[AuthResponse] = {
-    val urlEncodedVals = Seq("grant_type" -> AuthGrantType.password.toString,
-      "username" -> username, "password" -> password, "scope" -> scopes.mkString(" "))
+  def genPasswordToken(
+    username: String,
+    password: String,
+    scopes:   Seq[Scope]
+  ): Future[AuthResponse] = {
+    val urlEncodedVals = Seq(
+      "grant_type" -> AuthGrantType.password.toString,
+      "username" -> username, "password" -> password, "scope" -> scopes.mkString(" ")
+    )
 
     val req = createReqWithHeaderAndParams(urlEncodedVals)
     resolveAndDeserialize[AuthResponse](req)
@@ -47,7 +51,7 @@ class Auth(private[this] val apiToken: String)(implicit executor: ExecutionConte
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .addParameter("session-id", token)
 
-    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
   }
 }
 

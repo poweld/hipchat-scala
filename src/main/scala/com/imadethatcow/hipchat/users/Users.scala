@@ -6,10 +6,12 @@ import com.imadethatcow.hipchat.common.caseclass.{User, UsersResponse}
 import scala.concurrent.{ExecutionContext, Future}
 
 class Users(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def getAll(startIndex: Option[Long] = None,
-          maxResults: Option[Long] = None,
-          includeGuests: Option[Boolean] = None,
-          includeDeleted: Option[Boolean] = None): Future[Seq[User]] = {
+  def getAll(
+    startIndex:     Option[Long]    = None,
+    maxResults:     Option[Long]    = None,
+    includeGuests:  Option[Boolean] = None,
+    includeDeleted: Option[Boolean] = None
+  ): Future[Seq[User]] = {
     var req = addToken(Users.url, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
@@ -17,9 +19,10 @@ class Users(private[this] val apiToken: String)(implicit executor: ExecutionCont
     for (mr <- includeDeleted) req = req.addQueryParameter("include-deleted", mr.toString)
 
     resolveAndDeserialize[UsersResponse](req) map {
-      response => response.items map {
-        item => User(item.mention_name, item.id, item.name)
-      }
+      response =>
+        response.items map {
+          item => User(item.mention_name, item.id, item.name)
+        }
     }
   }
 }
@@ -27,10 +30,4 @@ class Users(private[this] val apiToken: String)(implicit executor: ExecutionCont
 object Users {
   val url = (apiUrl / "user").GET
 }
-
-
-
-
-
-
 

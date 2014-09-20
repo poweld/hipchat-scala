@@ -6,18 +6,21 @@ import com.imadethatcow.hipchat.common.caseclass.{EmoticonDetails, Emoticon, Emo
 import scala.concurrent.{ExecutionContext, Future}
 
 class Emoticons(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def getAll(startIndex: Option[Long] = None,
-             maxResults: Option[Long] = None,
-             `type`: Option[Boolean] = None): Future[Seq[Emoticon]] = {
+  def getAll(
+    startIndex: Option[Long]    = None,
+    maxResults: Option[Long]    = None,
+    `type`:     Option[Boolean] = None
+  ): Future[Seq[Emoticon]] = {
     var req = addToken(Emoticons.url, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (t <- `type`) req = req.addQueryParameter("type", t.toString)
 
     resolveAndDeserialize[EmoticonsResponse](req) map {
-      response => response.items.map {
-        item => Emoticon(item.url, item.id, item.shortcut)
-      }.toSeq
+      response =>
+        response.items.map {
+          item => Emoticon(item.url, item.id, item.shortcut)
+        }.toSeq
     }
   }
 

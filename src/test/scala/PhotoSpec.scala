@@ -7,7 +7,7 @@ import scala.concurrent.duration.Duration
 class PhotoSpec extends FlatSpec with Matchers with WithConfig {
   val apiToken = config("auth_token")
   val email = config("test_email")
-	val image = config("test_image")
+  val image = config("test_image")
 
   val photo = new Photos(apiToken)
   "Put photo" should "return true" in {

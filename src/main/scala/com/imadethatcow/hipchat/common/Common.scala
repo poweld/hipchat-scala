@@ -18,7 +18,7 @@ object Common extends Logging with Config {
   val apiUrl = url(config.getString("com.imadethatcow.hipchat.api-url"))
   val defaultResponseCode: Int = 200
 
-  def addFormUrlEncodedVals(req: Req, vals: Seq[(String,String)]): Req =
+  def addFormUrlEncodedVals(req: Req, vals: Seq[(String, String)]): Req =
     vals.foldLeft(req) {
       case (request, (name, value)) => request.addParameter(name, value)
     }

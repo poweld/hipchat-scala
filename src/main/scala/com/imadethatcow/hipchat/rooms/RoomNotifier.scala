@@ -9,11 +9,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class RoomNotifier(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   import MessageFormat._
   import com.imadethatcow.hipchat.common.enums.Color._
-  def sendNotification(roomIdOrName: String,
-           message: String,
-           color: Color = Color.yellow,
-           notify: Boolean = false,
-           messageFormat: MessageFormat = MessageFormat.html): Future[Boolean] = {
+  def sendNotification(
+    roomIdOrName:  String,
+    message:       String,
+    color:         Color         = Color.yellow,
+    notify:        Boolean       = false,
+    messageFormat: MessageFormat = MessageFormat.html
+  ): Future[Boolean] = {
     val notification = RoomNotification(color.toString, message, notify, messageFormat.toString)
     // TODO: the following is an ugly hack. "notify" as a reserved name, so we can't use it in the case class
     val body = mapper.writeValueAsString(notification).replaceFirst(""""_notify""", """"notify""")
@@ -21,10 +23,10 @@ class RoomNotifier(private[this] val apiToken: String)(implicit executor: Execut
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
-    resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
+    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
   }
 }
 
 object RoomNotifier {
-  private def url(roomIdOrName: String) = (apiUrl/ "room" / roomIdOrName / "notification").POST
+  private def url(roomIdOrName: String) = (apiUrl / "room" / roomIdOrName / "notification").POST
 }

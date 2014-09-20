@@ -21,9 +21,9 @@ class ViewHistorySpec extends FlatSpec with WithConfig {
 
   it should "return a valid JSON response when specifying max-results" in {
     for (seq <- viewHistory.roomHistory(room, maxResults = Some(10L)); history <- seq) {
-       println(history)
-     }
-   }
+      println(history)
+    }
+  }
 
   it should "return a valid JSON response when specifying include-archived" in {
     viewHistory.roomHistory(room, reverse = Some(true))
