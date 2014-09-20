@@ -16,7 +16,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
     name:         Option[String] = None
   ): Future[WebhookCreateResponse] = {
     val webhook = WebhookCreateRequest(url, event.toString, pattern, name)
-    val body = mapper.writeValueAsString(webhook)
+    val body = readMapper.writeValueAsString(webhook)
     val req = addToken(Webhooks.urlPost(roomIdOrName), apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")

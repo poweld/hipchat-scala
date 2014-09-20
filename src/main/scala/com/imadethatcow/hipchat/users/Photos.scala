@@ -8,7 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class Photos(private[this] val apiToken: String)(implicit executor: ExecutionContext) {
   def update(idOrEmail: String, encodedPhoto: String): Future[Boolean] = {
     val req = addToken(Photos.urlPut(idOrEmail), apiToken)
-      .setBody(mapper.writeValueAsString(Photo(encodedPhoto)))
+      .setBody(readMapper.writeValueAsString(Photo(encodedPhoto)))
       .setHeader("Content-Type", "application/json")
 
     resolveBoolRequest(req, 204)

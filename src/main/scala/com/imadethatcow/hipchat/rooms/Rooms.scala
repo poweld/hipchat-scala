@@ -19,7 +19,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     privacy:                   Privacy        = Privacy.public
   ): Future[RoomsCreateResponse] = {
     val room = RoomsCreateRequest(guestAccess, name, ownerIdEmailOrMentionName, privacy.toString)
-    val body = mapper.writeValueAsString(room)
+    val body = readMapper.writeValueAsString(room)
     val req = addToken(Rooms.url.POST, apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")

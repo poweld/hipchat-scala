@@ -1,7 +1,7 @@
 package com.imadethatcow.hipchat.common
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala._
 import com.typesafe.config.ConfigFactory
 import dispatch._
@@ -10,12 +10,17 @@ import scala.concurrent.ExecutionContext
 import scala.reflect.ClassTag
 import com.ning.http.client.Response
 
+import scala.util.Try
+
 object Common extends Logging with Config {
   // Mapper will ignore pairs with null/None values
-  val mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL).registerModule(DefaultScalaModule)
+  val readMapper = new ObjectMapper()
+    .setSerializationInclusion(Include.NON_NULL)
+    .registerModule(DefaultScalaModule)
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
   val writeMapper = new ObjectMapper().registerModule(DefaultScalaModule)
   val http = Http.configure(_ setFollowRedirects true)
-  val apiUrl = url(config.getString("com.imadethatcow.hipchat.api-url"))
+  val apiUrl = url(config.getString("api-url"))
   val defaultResponseCode: Int = 200
 
   def addFormUrlEncodedVals(req: Req, vals: Seq[(String, String)]): Req =
@@ -42,7 +47,7 @@ object Common extends Logging with Config {
     resolveRequest(req, expectedResponseCode) map {
       response =>
         val tClass = implicitly[ClassTag[T]].runtimeClass
-        val mappedObject = mapper.readValue(response.getResponseBody, tClass)
+        val mappedObject = readMapper.readValue(response.getResponseBody, tClass)
         mappedObject.asInstanceOf[T]
     }
   }
@@ -53,5 +58,6 @@ trait Logging {
 }
 
 trait Config {
-  val config = ConfigFactory.load
+  private val _configKey = "com.imadethatcow.hipchat"
+  val config = ConfigFactory.load.getConfig(_configKey)
 }

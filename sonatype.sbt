@@ -23,6 +23,10 @@ pomExtra := <url>https://github.com/poweld/hipchat-scala</url>
       <email>poweld@gmail.com</email>
     </developer>
     <developer>
+      <id>mdotson</id>
+      <name>Michael Dotson</name>
+    </developer>
+    <developer>
       <id>giabao</id>
       <name>Gia Bảo</name>
       <email>giabao@sandinh.net</email>

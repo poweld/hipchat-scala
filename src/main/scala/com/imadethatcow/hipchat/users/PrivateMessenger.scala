@@ -8,7 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PrivateMessenger(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   def sendMessage(idOrEmail: String, message: String): Future[Boolean] = {
     val req = addToken(PrivateMessenger.url(idOrEmail), apiToken)
-      .setBody(mapper.writeValueAsString(PrivateMessage(message)))
+      .setBody(readMapper.writeValueAsString(PrivateMessage(message)))
       .setHeader("Content-Type", "application/json")
 
     resolveBoolRequest(req, 204)

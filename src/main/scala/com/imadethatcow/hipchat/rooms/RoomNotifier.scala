@@ -18,7 +18,7 @@ class RoomNotifier(private[this] val apiToken: String)(implicit executor: Execut
   ): Future[Boolean] = {
     val notification = RoomNotification(color.toString, message, notify, messageFormat.toString)
     // TODO: the following is an ugly hack. "notify" as a reserved name, so we can't use it in the case class
-    val body = mapper.writeValueAsString(notification).replaceFirst(""""_notify""", """"notify""")
+    val body = readMapper.writeValueAsString(notification).replaceFirst(""""_notify""", """"notify""")
     val req = addToken(RoomNotifier.url(roomIdOrName), apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
