@@ -2,7 +2,6 @@ package com.imadethatcow.hipchat.common.caseclass
 
 import com.imadethatcow.hipchat.common.enums.AuthGrantType
 import AuthGrantType.AuthGrantType
-import com.imadethatcow.hipchat.common.enums.OwnerType.OwnerType
 
 case class AuthRequest(grant_type: AuthGrantType,
                        username: Option[String] = None,

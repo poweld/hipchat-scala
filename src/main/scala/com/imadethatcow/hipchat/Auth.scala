@@ -53,48 +53,7 @@ class Auth(private[this] val apiToken: String)(implicit executor: ExecutionConte
 
 private object Auth {
   private val urlBase = apiUrl / "oauth" / "token"
-  def urlGet(token: String) = {
-    (urlBase / token).GET
-  }
-  def urlDelete(token: String) = {
-    (urlBase / token).DELETE
-  }
+  def urlGet(token: String) = (urlBase / token).GET
+  def urlDelete(token: String) = (urlBase / token).DELETE
   val urlPost = urlBase.POST
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

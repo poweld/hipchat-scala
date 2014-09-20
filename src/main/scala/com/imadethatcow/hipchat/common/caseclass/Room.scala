@@ -1,5 +1,4 @@
 package com.imadethatcow.hipchat.common.caseclass
-import com.imadethatcow.hipchat.common.enums.Privacy._
 
 case class Room(id: Long, name: String)
 case class RoomsItem(id: Long, links: RoomsItemLinks, name: String)

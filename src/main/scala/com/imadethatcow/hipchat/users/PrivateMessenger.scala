@@ -16,7 +16,5 @@ class PrivateMessenger(private[this] val apiToken: String)(implicit executor: Ex
 }
 
 object PrivateMessenger {
-  def url(idOrEmail: String) = (apiUrl / "user" / idOrEmail / "message").POST
+  private def url(idOrEmail: String) = (apiUrl / "user" / idOrEmail / "message").POST
 }
-
-
