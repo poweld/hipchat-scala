@@ -6,21 +6,19 @@ version := "0.1"
 
 scalaVersion := "2.11.2"
 
-publishMavenStyle := true
+crossScalaVersions := Seq(
+  "2.11.2",
+  "2.10.4"
+)
 
-publishTo := {
-	val nexus = "https://oss.sonatype.org/"
-	if (isSnapshot.value)
-		Some("snapshots" at nexus + "content/repositories/snapshots")
-	else
-		Some("releases" at nexus + "service/local/staging/deploy/maven2")
-}
+scalacOptions ++= Seq(
+  "-encoding", "UTF-8", "-deprecation", "-unchecked", "-feature", //"-optimise",
+  "-Xmigration", "-Xfuture", //"–Xverify", "-Xcheck-null", "-Ystatistics",
+  "-Yinline-warnings", //"-Yinline",
+  "-Ywarn-dead-code", "-Ydead-code"
+)
 
-publishArtifact in Test := false
-
-licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
-
-homepage := Some(url("https://github.com/poweld"))
+javacOptions ++= Seq("-encoding", "UTF-8", "-source", "1.7", "-target", "1.7", "-Xlint:unchecked", "-Xlint:deprecation")
 
 libraryDependencies ++= Seq(
   "ch.qos.logback"                % "logback-classic"       % "1.1.2",
