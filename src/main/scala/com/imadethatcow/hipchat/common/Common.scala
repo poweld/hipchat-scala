@@ -8,25 +8,14 @@ import dispatch._
 import org.slf4j.LoggerFactory
 import scala.concurrent.ExecutionContext
 import scala.reflect.ClassTag
-import scala.util.{Success, Failure, Try}
 import com.ning.http.client.Response
 
-
 object Common extends Logging with Config {
-  val secureTry = Try(config.getBoolean("com.imadethatcow.hipchat.secure"))
-  val secure = secureTry match {
-    case Failure(e) => true
-    case Success(v) => v
-  }
-
   // Mapper will ignore pairs with null/None values
   val mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL).registerModule(DefaultScalaModule)
   val writeMapper = new ObjectMapper().registerModule(DefaultScalaModule)
   val http = Http.configure(_ setFollowRedirects true)
-  val apiRoot = "http://api.hipchat.com"
-  val apiRootSecure = "https://api.hipchat.com"
-  val version = "v2"
-  val apiUrl = if (secure) url(apiRootSecure) / version else url(apiRoot) / version
+  val apiUrl = url(config.getString("com.imadethatcow.hipchat.api-url"))
   val defaultResponseCode: Int = 200
 
   def addFormUrlEncodedVals(req: Req, vals: Seq[(String,String)]): Req =
