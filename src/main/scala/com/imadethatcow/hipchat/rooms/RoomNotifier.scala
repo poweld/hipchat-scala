@@ -9,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RoomNotifier(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
   import MessageFormat._
   import com.imadethatcow.hipchat.common.enums.Color._
-  def sendNotification(roomIdOrName: AnyRef,
+  def sendNotification(roomIdOrName: String,
            message: String,
            color: Color = Color.yellow,
            notify: Boolean = false,
@@ -26,12 +26,5 @@ class RoomNotifier(private[this] val apiToken: String)(implicit executor: Execut
 }
 
 object RoomNotifier {
-  def url(roomIdOrName: Any) = {
-    roomIdOrName match {
-      case _: String | _: Long =>
-        (apiUrl/ "room" / roomIdOrName.toString / "notification").POST
-    }
-  }
+  private def url(roomIdOrName: String) = (apiUrl/ "room" / roomIdOrName / "notification").POST
 }
-
-

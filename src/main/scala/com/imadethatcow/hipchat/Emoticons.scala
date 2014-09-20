@@ -21,23 +21,13 @@ class Emoticons(private[this] val apiToken: String)(implicit executor: Execution
     }
   }
 
-  def get(emoticonIdOrKey: Any): Future[EmoticonDetails] = {
+  def get(emoticonIdOrKey: String): Future[EmoticonDetails] = {
     val req = addToken(Emoticons.url(emoticonIdOrKey), apiToken)
     resolveAndDeserialize[EmoticonDetails](req)
   }
 }
 
 object Emoticons {
-  val url = (apiUrl / "emoticon").GET
-  def url(emoticonIdOrName: Any) = emoticonIdOrName match {
-    case _: Long | _: String =>
-      (apiUrl / "emoticon" / emoticonIdOrName.toString).GET
-  }
+  private val url = (apiUrl / "emoticon").GET
+  private def url(emoticonIdOrName: String) = (apiUrl / "emoticon" / emoticonIdOrName).GET
 }
-
-
-
-
-
-
-

@@ -24,7 +24,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     resolveAndDeserialize[RoomsCreateResponse](req, 201)
   }
 
-  def delete(roomIdOrName: Any): Future[Boolean] = {
+  def delete(roomIdOrName: String): Future[Boolean] = {
     val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
     resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false }
   }
@@ -44,12 +44,12 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     }
   }
 
-  def get(roomIdOrName: Any): Future[RoomDetails] = {
+  def get(roomIdOrName: String): Future[RoomDetails] = {
     val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
     resolveAndDeserialize[RoomDetails](req)
   }
 
-  def update(roomIdOrName: Any,
+  def update(roomIdOrName: String,
              newRoomName: String,
              newTopic: String,
              newPrivacy: Privacy = Privacy.public,
@@ -66,7 +66,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
   }
 
-  def setTopic(roomIdOrName: Any,
+  def setTopic(roomIdOrName: String,
                topic: String): Future[Boolean] = {
     val topicUrl = (Rooms.url(roomIdOrName) / "topic").PUT
     val req = addToken(topicUrl, apiToken)
@@ -78,19 +78,8 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
 
 private object Rooms {
   val url = apiUrl / "room"
-  private def url(roomIdOrName: Any) = roomIdOrName match {
-    case _: Long | _: String =>
-      apiUrl / "room" / roomIdOrName.toString
-  }
-  def urlPut(roomIdOrName: Any) = url(roomIdOrName).PUT
-  def urlGet(roomIdOrName: Any) = url(roomIdOrName).GET
-  def urlDelete(roomIdOrName: Any) = url(roomIdOrName).DELETE
-
+  private def url(roomIdOrName: String) = apiUrl / "room" / roomIdOrName
+  def urlPut(roomIdOrName: String) = url(roomIdOrName).PUT
+  def urlGet(roomIdOrName: String) = url(roomIdOrName).GET
+  def urlDelete(roomIdOrName: String) = url(roomIdOrName).DELETE
 }
-
-
-
-
-
-
-

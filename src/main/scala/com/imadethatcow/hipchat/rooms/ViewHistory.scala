@@ -7,7 +7,7 @@ import com.imadethatcow.hipchat.common.caseclass.{HistoriesResponse, HistoryItem
 import scala.concurrent.{ExecutionContext, Future}
 
 class ViewHistory(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def roomHistory(roomIdOrName: Any,
+  def roomHistory(roomIdOrName: String,
            date: Option[Any] = None, // Must be either "recent" or conform to ISO-8601, use joda for the latter
            timezone: Option[String] = None,
            startIndex: Option[Long] = None,
@@ -27,15 +27,5 @@ class ViewHistory(private[this] val apiToken: String)(implicit executor: Executi
 }
 
 object ViewHistory {
-  def url(roomIdOrName: Any) = {
-    roomIdOrName match {
-      case _: String | _: Long =>
-        (apiUrl / "room" / roomIdOrName.toString / "history").GET
-    }
-  }
+  private def url(roomIdOrName: String) = (apiUrl / "room" / roomIdOrName / "history").GET
 }
-
-
-
-
-

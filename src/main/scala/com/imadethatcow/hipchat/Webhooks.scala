@@ -8,7 +8,7 @@ import WebhookEvent._
 import com.imadethatcow.hipchat.common.caseclass._
 
 class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
-  def create(roomIdOrName: Any,
+  def create(roomIdOrName: String,
              url: String,
              event: WebhookEvent,
              pattern: Option[String] = None,
@@ -21,7 +21,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
 
     resolveAndDeserialize[WebhookCreateResponse](req, 201)
   }
-  def get(roomIdOrName: Any,
+  def get(roomIdOrName: String,
           webhookId: Long): Future[Webhook] = {
     val req = addToken(Webhooks.urlGet(roomIdOrName, webhookId), apiToken)
 
@@ -30,7 +30,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
     }
   }
 
-  def getAll(roomIdOrName: Any,
+  def getAll(roomIdOrName: String,
              startIndex: Option[Long] = None,
              maxResults: Option[Long] = None): Future[Seq[WebhookSimple]] = {
     var req = addToken(Webhooks.urlGetAll(roomIdOrName), apiToken)
@@ -44,7 +44,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
     }
   }
 
-  def delete(roomIdOrName: Any, webhookId: Long): Future[Boolean] = {
+  def delete(roomIdOrName: String, webhookId: Long): Future[Boolean] = {
     val req = addToken(Webhooks.urlDelete(roomIdOrName, webhookId), apiToken)
 
     resolveRequest(req, 204) map { _ => true} recover { case _: Exception => false}
@@ -52,52 +52,9 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
 }
 
 object Webhooks {
-  def urlBase(roomIdOrName: Any) = {
-    roomIdOrName match {
-      case _: String | _: Long =>
-        apiUrl / "room" / roomIdOrName.toString / "webhook"
-    }
-  }
-  def urlPost(roomIdOrName: Any) = urlBase(roomIdOrName).POST
-  def urlGet(roomIdOrName: Any, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).GET
-  def urlGetAll(roomIdOrName: Any) = urlBase(roomIdOrName).GET
-  def urlDelete(roomIdOrName: Any, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).DELETE
+  private def urlBase(roomIdOrName: String) = apiUrl / "room" / roomIdOrName / "webhook"
+  def urlPost(roomIdOrName: String) = urlBase(roomIdOrName).POST
+  def urlGet(roomIdOrName: String, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).GET
+  def urlGetAll(roomIdOrName: String) = urlBase(roomIdOrName).GET
+  def urlDelete(roomIdOrName: String, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).DELETE
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
