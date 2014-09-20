@@ -11,7 +11,7 @@ class PrivateMessenger(private[this] val apiToken: String)(implicit executor: Ex
       .setBody(mapper.writeValueAsString(PrivateMessage(message)))
       .setHeader("Content-Type", "application/json")
 
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 }
 

@@ -28,7 +28,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
 
   def delete(roomIdOrName: String): Future[Boolean] = {
     val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 
   def getAll(
@@ -70,7 +70,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     val req = addToken(Rooms.urlPut(roomIdOrName).PUT, apiToken)
       .setBody(json)
       .setHeader("Content-Type", "application/json")
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 
   def setTopic(
@@ -81,7 +81,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     val req = addToken(topicUrl, apiToken)
       .setBody(writeMapper.writeValueAsString(TopicRequest(topic)))
       .setHeader("Content-Type", "application/json")
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 }
 

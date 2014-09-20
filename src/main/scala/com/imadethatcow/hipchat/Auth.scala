@@ -51,7 +51,7 @@ class Auth(private[this] val apiToken: String)(implicit executor: ExecutionConte
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .addParameter("session-id", token)
 
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 }
 

@@ -35,6 +35,9 @@ object Common extends Logging with Config {
     }
   }
 
+  @inline def resolveBoolRequest(req: Req, expectedResponseCode: Int = defaultResponseCode)(implicit executor: ExecutionContext): Future[Boolean] =
+    resolveRequest(req, expectedResponseCode) map { _ => true } recover { case _: Exception => false }
+
   def resolveAndDeserialize[T](req: Req, expectedResponseCode: Int = defaultResponseCode)(implicit executor: ExecutionContext, classTag: ClassTag[T]): Future[T] = {
     resolveRequest(req, expectedResponseCode) map {
       response =>

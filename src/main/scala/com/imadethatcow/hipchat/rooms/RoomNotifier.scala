@@ -23,7 +23,7 @@ class RoomNotifier(private[this] val apiToken: String)(implicit executor: Execut
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 }
 

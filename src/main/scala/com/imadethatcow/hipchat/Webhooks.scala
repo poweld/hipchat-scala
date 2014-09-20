@@ -54,7 +54,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
   def delete(roomIdOrName: String, webhookId: Long): Future[Boolean] = {
     val req = addToken(Webhooks.urlDelete(roomIdOrName, webhookId), apiToken)
 
-    resolveRequest(req, 204) map { _ => true } recover { case _: Exception => false }
+    resolveBoolRequest(req, 204)
   }
 }
 
