@@ -3,6 +3,11 @@ hipchat-scala
 
 Scala interface for the HipChat v2 API
 
+Importing with sbt:
+```
+libraryDependencies += "com.imadethatcow" %% "hipchat-scala" % "0.1"
+```
+
 Please check [https://www.hipchat.com/docs/apiv2] to get a better sense for available capabilities.
 
 Currently available capabilities and their (associated class):
