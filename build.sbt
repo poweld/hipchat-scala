@@ -77,3 +77,9 @@ libraryDependencies ++= Seq(
   "com.typesafe"                  % "config"                % "1.2.1",
   "org.scalatest"                 %% "scalatest"            % "2.2.2"     % "test"
 )
+
+mappings in(Compile, packageBin) ~= {
+  _.filterNot {
+    case (file, _) => file.getName == "logback.xml"
+  }
+}
