@@ -15,4 +15,4 @@ case class EmoticonDetails(
   creator:    UsersItem,
   links:      EmoticonsItemLinks,
   url:        String
-)
+) extends Serializable

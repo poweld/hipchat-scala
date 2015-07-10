@@ -5,4 +5,4 @@ case class RoomNotification(
   message:        String,
   _notify:        Boolean,
   message_format: String
-)
+) extends Serializable
