@@ -1,5 +1,6 @@
 package com.imadethatcow.hipchat.common.caseclass
 
+import com.imadethatcow.hipchat.common.HipchatValueObject
 import com.imadethatcow.hipchat.common.enums.AuthGrantType
 import AuthGrantType.AuthGrantType
 
@@ -11,7 +12,7 @@ case class AuthRequest(
   scope:         Option[String] = None,
   password:      Option[String] = None,
   refresh_token: Option[String] = None
-) extends Serializable
+) extends HipchatValueObject
 
 case class AuthResponse(
   access_token:  String,
@@ -21,7 +22,7 @@ case class AuthResponse(
   scope:         String,
   group_id:      String,
   refresh_token: Option[String] = None
-) extends Serializable
+) extends HipchatValueObject
 
 case class GetSessionResponse(
   scopes:       Seq[String],
@@ -30,7 +31,7 @@ case class GetSessionResponse(
   client:       AuthClient,
   owner:        Option[UsersItem],
   owner_type:   String
-) extends Serializable
+) extends HipchatValueObject
 
 case class AuthClient(
   room:            Option[RoomsItem],
@@ -38,4 +39,4 @@ case class AuthClient(
   allowed_scopes:  Seq[String],
   name:            Option[String],
   oauth_client_id: String
-) extends Serializable
+) extends HipchatValueObject

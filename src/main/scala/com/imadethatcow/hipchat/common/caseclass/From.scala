@@ -1,4 +1,6 @@
 package com.imadethatcow.hipchat.common.caseclass
 
-case class From(id: Long, links: FromLinks, mention_name: String, name: String) extends Serializable
-case class FromLinks(self: String) extends Serializable
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
+case class From(id: Long, links: FromLinks, mention_name: String, name: String) extends HipchatValueObject
+case class FromLinks(self: String) extends HipchatValueObject

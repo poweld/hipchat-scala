@@ -1,5 +1,7 @@
 package com.imadethatcow.hipchat.common.caseclass
 
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
 case class Emoticon(url: String, id: Long, shortcut: String)
 case class EmoticonsLinks(self: String, prev: String, next: String)
 case class EmoticonsItemLinks(self: String)
@@ -15,4 +17,4 @@ case class EmoticonDetails(
   creator:    UsersItem,
   links:      EmoticonsItemLinks,
   url:        String
-) extends Serializable
+) extends HipchatValueObject

@@ -1,3 +1,5 @@
 package com.imadethatcow.hipchat.common.caseclass
 
-case class Photo(photo: String) extends Serializable
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
+case class Photo(photo: String) extends HipchatValueObject

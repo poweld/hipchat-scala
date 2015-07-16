@@ -61,3 +61,5 @@ trait Config {
   private val _configKey = "com.imadethatcow.hipchat"
   val config = ConfigFactory.load.getConfig(_configKey)
 }
+
+trait HipchatValueObject extends Serializable
