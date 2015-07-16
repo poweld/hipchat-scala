@@ -1,3 +1,5 @@
 package com.imadethatcow.hipchat.common.caseclass
 
-case class PrivateMessage(message: String)
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
+case class PrivateMessage(message: String) extends HipchatValueObject

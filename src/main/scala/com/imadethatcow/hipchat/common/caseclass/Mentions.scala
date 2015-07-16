@@ -1,4 +1,6 @@
 package com.imadethatcow.hipchat.common.caseclass
 
-case class MentionItem(id: Long, links: MentionLinks, mention_name: String, name: String)
-case class MentionLinks(self: String)
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
+case class MentionItem(id: Long, links: MentionLinks, mention_name: String, name: String) extends HipchatValueObject
+case class MentionLinks(self: String) extends HipchatValueObject

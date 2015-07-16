@@ -1,6 +1,8 @@
 package com.imadethatcow.hipchat.common.enums
 
-object MessageFormat extends Enumeration {
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
+object MessageFormat extends Enumeration with HipchatValueObject {
   type MessageFormat = Value
   val html, text = Value
 }

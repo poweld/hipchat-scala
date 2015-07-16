@@ -1,6 +1,8 @@
 package com.imadethatcow.hipchat.common.enums
 
-object Color extends Enumeration {
+import com.imadethatcow.hipchat.common.HipchatValueObject
+
+object Color extends Enumeration with HipchatValueObject {
   type Color = Value
   val yellow, red, green, purple, gray, random = Value
 }
