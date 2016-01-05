@@ -3,14 +3,12 @@ package com.imadethatcow.hipchat.common
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala._
+import com.ning.http.client.Response
 import com.typesafe.config.ConfigFactory
 import dispatch._
 import org.slf4j.LoggerFactory
 import scala.concurrent.ExecutionContext
 import scala.reflect.ClassTag
-import com.ning.http.client.Response
-
-import scala.util.Try
 
 object Common extends Logging with Config {
   // Mapper will ignore pairs with null/None values
@@ -19,7 +17,7 @@ object Common extends Logging with Config {
     .registerModule(DefaultScalaModule)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
   val writeMapper = new ObjectMapper().registerModule(DefaultScalaModule)
-  val http = Http.configure(_ setFollowRedirects true)
+  val http = Http.configure(_ setFollowRedirect true)
   val apiUrl = url(config.getString("api-url"))
   val defaultResponseCode: Int = 200
 

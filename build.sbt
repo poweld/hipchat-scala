@@ -70,7 +70,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback"                % "logback-classic"       % "1.1.2",
   "com.fasterxml.jackson.core"    % "jackson-core"          % "2.4.2",
   "com.fasterxml.jackson.module"  %% "jackson-module-scala" % "2.4.2",
-  "net.databinder.dispatch"       %% "dispatch-core"        % "0.11.2",
+  "net.databinder.dispatch"       %% "dispatch-core"        % "0.11.3",
   "com.typesafe.akka"             %% "akka-actor"           % "2.3.6",
   "joda-time"                     % "joda-time"             % "2.4",
   "org.joda"                      % "joda-convert"          % "1.7",
