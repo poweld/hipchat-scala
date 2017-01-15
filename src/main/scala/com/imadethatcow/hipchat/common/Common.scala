@@ -4,22 +4,29 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala._
 import com.ning.http.client.Response
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import dispatch._
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
+
 import scala.concurrent.ExecutionContext
 import scala.reflect.ClassTag
 
 object Common extends Logging with Config {
   // Mapper will ignore pairs with null/None values
-  val readMapper = new ObjectMapper()
+  val readMapper: ObjectMapper = new ObjectMapper()
     .setSerializationInclusion(Include.NON_NULL)
     .registerModule(DefaultScalaModule)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-  val writeMapper = new ObjectMapper().registerModule(DefaultScalaModule)
-  val http = Http.configure(_ setFollowRedirect true)
-  val apiUrl = url(config.getString("api-url"))
+  val writeMapper: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
+  val http: Http = Http.configure(_ setFollowRedirect true)
+  val apiUrl: Req = url(config.getString("api-url"))
   val defaultResponseCode: Int = 200
+
+  sys.ShutdownHookThread {
+    Http.shutdown()
+    http.shutdown()
+    log.info("HTTP client shutdown")
+  }
 
   def addFormUrlEncodedVals(req: Req, vals: Seq[(String, String)]): Req =
     vals.foldLeft(req) {
@@ -52,12 +59,12 @@ object Common extends Logging with Config {
 }
 
 trait Logging {
-  val log = LoggerFactory.getLogger(getClass)
+  val log: Logger = LoggerFactory.getLogger(getClass)
 }
 
 trait Config {
   private val _configKey = "com.imadethatcow.hipchat"
-  val config = ConfigFactory.load.getConfig(_configKey)
+  val config: com.typesafe.config.Config = ConfigFactory.load.getConfig(_configKey)
 }
 
 trait HipchatValueObject extends Serializable
