@@ -48,7 +48,7 @@ pomExtra := {
 
 name := "hipchat-scala"
 
-version := "0.3"
+version := "1.1"
 
 scalaVersion := "2.11.2"
 
