@@ -13,7 +13,7 @@ class Photos(private[this] val apiToken: String)(implicit executor: ExecutionCon
 
     resolveBoolRequest(req, 204)
   }
-  def delete(idOrEmail: String) = {
+  def delete(idOrEmail: String): Future[Boolean] = {
     val req = addToken(Photos.urlDelete(idOrEmail), apiToken)
 
     resolveBoolRequest(req, 204)

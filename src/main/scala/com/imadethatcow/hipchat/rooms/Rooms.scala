@@ -1,6 +1,6 @@
 package com.imadethatcow.hipchat.rooms
 
-import com.imadethatcow.hipchat.common.{Logging, Common}
+import com.imadethatcow.hipchat.common.{Common, Logging}
 import Common._
 import com.imadethatcow.hipchat.common.caseclass._
 import com.imadethatcow.hipchat.common.caseclass.RoomsResponse
@@ -9,6 +9,8 @@ import com.imadethatcow.hipchat.common.caseclass.RoomUpdate
 import com.imadethatcow.hipchat.common.caseclass.Room
 import com.imadethatcow.hipchat.common.enums.Privacy
 import com.imadethatcow.hipchat.common.enums.Privacy.Privacy
+import dispatch.Req
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
@@ -86,7 +88,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
 }
 
 private object Rooms {
-  val url = apiUrl / "room"
+  val url: Req = apiUrl / "room"
   private def url(roomIdOrName: String) = apiUrl / "room" / roomIdOrName
   def urlPut(roomIdOrName: String) = url(roomIdOrName).PUT
   def urlGet(roomIdOrName: String) = url(roomIdOrName).GET
