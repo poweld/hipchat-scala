@@ -8,10 +8,15 @@ import com.imadethatcow.hipchat.common.enums.Scope.Scope
 import com.imadethatcow.hipchat.common.enums.AuthGrantType
 import scala.concurrent.{ExecutionContext, Future}
 
-class Auth(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
+class Auth(private[this] val apiToken: String, private[this] val baseUrlOpt: Option[String] = None)(implicit executor: ExecutionContext) extends Logging {
+
+  private val urlBase = reqFromBaseUrl(baseUrlOpt) / "oauth" / "token"
+  private def urlGet(token: String) = (urlBase / token).GET
+  private def urlDelete(token: String) = (urlBase / token).DELETE
+  private val urlPost = urlBase.POST
 
   private def createReqWithHeaderAndParams(urlEncodedVals: Seq[(String, String)]) = {
-    val reqWithHeader = addToken(Auth.urlPost, apiToken)
+    val reqWithHeader = addToken(urlPost, apiToken)
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
 
     addFormUrlEncodedVals(reqWithHeader, urlEncodedVals)
@@ -39,7 +44,7 @@ class Auth(private[this] val apiToken: String)(implicit executor: ExecutionConte
   }
 
   def getSession(token: String): Future[GetSessionResponse] = {
-    val req = addToken(Auth.urlGet(token), apiToken)
+    val req = addToken(urlGet(token), apiToken)
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .addParameter("session-id", token)
 
@@ -47,17 +52,10 @@ class Auth(private[this] val apiToken: String)(implicit executor: ExecutionConte
   }
 
   def deleteSession(token: String): Future[Boolean] = {
-    val req = addToken(Auth.urlDelete(token), apiToken)
+    val req = addToken(urlDelete(token), apiToken)
       .setHeader("Content-Type", "application/x-www-form-urlencoded")
       .addParameter("session-id", token)
 
     resolveBoolRequest(req, 204)
   }
-}
-
-private object Auth {
-  private val urlBase = apiUrl / "oauth" / "token"
-  def urlGet(token: String) = (urlBase / token).GET
-  def urlDelete(token: String) = (urlBase / token).DELETE
-  val urlPost = urlBase.POST
 }

@@ -5,13 +5,18 @@ import com.imadethatcow.hipchat.common.Logging
 import com.imadethatcow.hipchat.common.caseclass.{EmoticonDetails, Emoticon, EmoticonsResponse}
 import scala.concurrent.{ExecutionContext, Future}
 
-class Emoticons(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
+class Emoticons(private[this] val apiToken: String, private[this] val baseUrlOpt: Option[String] = None)(implicit executor: ExecutionContext) extends Logging {
+
+  private val baseUrl = reqFromBaseUrl(baseUrlOpt)
+  private val url = (baseUrl / "emoticon").GET
+  private def url(emoticonIdOrName: String) = (baseUrl / "emoticon" / emoticonIdOrName).GET
+
   def getAll(
     startIndex: Option[Long]    = None,
     maxResults: Option[Long]    = None,
     `type`:     Option[Boolean] = None
   ): Future[Seq[Emoticon]] = {
-    var req = addToken(Emoticons.url, apiToken)
+    var req = addToken(url, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (t <- `type`) req = req.addQueryParameter("type", t.toString)
@@ -25,12 +30,7 @@ class Emoticons(private[this] val apiToken: String)(implicit executor: Execution
   }
 
   def get(emoticonIdOrKey: String): Future[EmoticonDetails] = {
-    val req = addToken(Emoticons.url(emoticonIdOrKey), apiToken)
+    val req = addToken(url(emoticonIdOrKey), apiToken)
     resolveAndDeserialize[EmoticonDetails](req)
   }
-}
-
-object Emoticons {
-  private val url = (apiUrl / "emoticon").GET
-  private def url(emoticonIdOrName: String) = (apiUrl / "emoticon" / emoticonIdOrName).GET
 }

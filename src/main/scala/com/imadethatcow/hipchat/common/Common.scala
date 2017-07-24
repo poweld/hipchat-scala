@@ -45,6 +45,10 @@ object Common extends Logging with Config {
     }
   }
 
+  def reqFromBaseUrl(baseUrlOpt: Option[String]): Req = {
+    baseUrlOpt.map(dispatch.url).getOrElse(apiUrl)
+  }
+
   @inline def resolveBoolRequest(req: Req, expectedResponseCode: Int = defaultResponseCode)(implicit executor: ExecutionContext): Future[Boolean] =
     resolveRequest(req, expectedResponseCode) map { _ => true } recover { case _: Exception => false }
 
