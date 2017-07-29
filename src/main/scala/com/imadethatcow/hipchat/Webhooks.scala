@@ -7,7 +7,14 @@ import scala.concurrent.{ExecutionContext, Future}
 import WebhookEvent._
 import com.imadethatcow.hipchat.common.caseclass._
 
-class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
+class Webhooks(private[this] val apiToken: String, private[this] val baseUrlOpt: Option[String] = None)(implicit executor: ExecutionContext) extends Logging {
+
+  private def urlBase(roomIdOrName: String) = reqFromBaseUrl(baseUrlOpt) / "room" / roomIdOrName / "webhook"
+  private def urlPost(roomIdOrName: String) = urlBase(roomIdOrName).POST
+  private def urlGet(roomIdOrName: String, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).GET
+  private def urlGetAll(roomIdOrName: String) = urlBase(roomIdOrName).GET
+  private def urlDelete(roomIdOrName: String, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).DELETE
+
   def create(
     roomIdOrName: String,
     url:          String,
@@ -17,7 +24,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
   ): Future[WebhookCreateResponse] = {
     val webhook = WebhookCreateRequest(url, event.toString, pattern, name)
     val body = readMapper.writeValueAsString(webhook)
-    val req = addToken(Webhooks.urlPost(roomIdOrName), apiToken)
+    val req = addToken(urlPost(roomIdOrName), apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
 
@@ -27,7 +34,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
     roomIdOrName: String,
     webhookId:    Long
   ): Future[Webhook] = {
-    val req = addToken(Webhooks.urlGet(roomIdOrName, webhookId), apiToken)
+    val req = addToken(urlGet(roomIdOrName, webhookId), apiToken)
 
     resolveAndDeserialize[WebhookGetItem](req) map {
       response => Webhook(response.room, response.url, response.pattern, response.event, response.name, response.id, response.creator)
@@ -39,7 +46,7 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
     startIndex:   Option[Long] = None,
     maxResults:   Option[Long] = None
   ): Future[Seq[WebhookSimple]] = {
-    var req = addToken(Webhooks.urlGetAll(roomIdOrName), apiToken)
+    var req = addToken(urlGetAll(roomIdOrName), apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
 
@@ -52,16 +59,8 @@ class Webhooks(private[this] val apiToken: String)(implicit executor: ExecutionC
   }
 
   def delete(roomIdOrName: String, webhookId: Long): Future[Boolean] = {
-    val req = addToken(Webhooks.urlDelete(roomIdOrName, webhookId), apiToken)
+    val req = addToken(urlDelete(roomIdOrName, webhookId), apiToken)
 
     resolveBoolRequest(req, 204)
   }
-}
-
-object Webhooks {
-  private def urlBase(roomIdOrName: String) = apiUrl / "room" / roomIdOrName / "webhook"
-  def urlPost(roomIdOrName: String) = urlBase(roomIdOrName).POST
-  def urlGet(roomIdOrName: String, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).GET
-  def urlGetAll(roomIdOrName: String) = urlBase(roomIdOrName).GET
-  def urlDelete(roomIdOrName: String, webhookId: Long) = (urlBase(roomIdOrName) / webhookId).DELETE
 }

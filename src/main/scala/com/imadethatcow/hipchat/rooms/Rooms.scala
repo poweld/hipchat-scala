@@ -13,7 +13,15 @@ import dispatch.Req
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionContext) extends Logging {
+class Rooms(private[this] val apiToken: String, private[this] val baseUrlOpt: Option[String] = None)(implicit executor: ExecutionContext) extends Logging {
+
+  private val baseUrl = reqFromBaseUrl(baseUrlOpt)
+  private val url: Req = baseUrl / "room"
+  private def url(roomIdOrName: String) = baseUrl / "room" / roomIdOrName
+  private def urlPut(roomIdOrName: String) = url(roomIdOrName).PUT
+  private def urlGet(roomIdOrName: String) = url(roomIdOrName).GET
+  private def urlDelete(roomIdOrName: String) = url(roomIdOrName).DELETE
+
   def create(
     name:                      String,
     ownerIdEmailOrMentionName: Option[String] = None,
@@ -22,14 +30,14 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
   ): Future[RoomsCreateResponse] = {
     val room = RoomsCreateRequest(guestAccess, name, ownerIdEmailOrMentionName, privacy.toString)
     val body = readMapper.writeValueAsString(room)
-    val req = addToken(Rooms.url.POST, apiToken)
+    val req = addToken(url.POST, apiToken)
       .setBody(body)
       .setHeader("Content-Type", "application/json")
     resolveAndDeserialize[RoomsCreateResponse](req, 201)
   }
 
   def delete(roomIdOrName: String): Future[Boolean] = {
-    val req = addToken(Rooms.urlDelete(roomIdOrName), apiToken)
+    val req = addToken(urlDelete(roomIdOrName), apiToken)
     resolveBoolRequest(req, 204)
   }
 
@@ -38,7 +46,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     maxResults:      Option[Long]    = None,
     includeArchived: Option[Boolean] = None
   ): Future[Seq[Room]] = {
-    var req = addToken(Rooms.url.GET, apiToken)
+    var req = addToken(url.GET, apiToken)
     for (si <- startIndex) req = req.addQueryParameter("start-index", si.toString)
     for (mr <- maxResults) req = req.addQueryParameter("max-results", mr.toString)
     for (ia <- includeArchived) req = req.addQueryParameter("include-archived", ia.toString)
@@ -52,7 +60,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
   }
 
   def get(roomIdOrName: String): Future[RoomDetails] = {
-    val req = addToken(Rooms.urlGet(roomIdOrName), apiToken)
+    val req = addToken(urlGet(roomIdOrName), apiToken)
     resolveAndDeserialize[RoomDetails](req)
   }
 
@@ -69,7 +77,7 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     val name = newRoomName.substring(0, Math.min(newRoomName.length, 50)) // Name may only be 50 characters long
     val roomUpdate = RoomUpdate(name, newPrivacy.toString, newIsArchived, newIsGuestAccessible, newTopic, Owner(newOwnerIdOrEmail))
     val json = writeMapper.writeValueAsString(roomUpdate)
-    val req = addToken(Rooms.urlPut(roomIdOrName).PUT, apiToken)
+    val req = addToken(urlPut(roomIdOrName).PUT, apiToken)
       .setBody(json)
       .setHeader("Content-Type", "application/json")
     resolveBoolRequest(req, 204)
@@ -79,18 +87,10 @@ class Rooms(private[this] val apiToken: String)(implicit executor: ExecutionCont
     roomIdOrName: String,
     topic:        String
   ): Future[Boolean] = {
-    val topicUrl = (Rooms.url(roomIdOrName) / "topic").PUT
+    val topicUrl = (url(roomIdOrName) / "topic").PUT
     val req = addToken(topicUrl, apiToken)
       .setBody(writeMapper.writeValueAsString(TopicRequest(topic)))
       .setHeader("Content-Type", "application/json")
     resolveBoolRequest(req, 204)
   }
-}
-
-private object Rooms {
-  val url: Req = apiUrl / "room"
-  private def url(roomIdOrName: String) = apiUrl / "room" / roomIdOrName
-  def urlPut(roomIdOrName: String) = url(roomIdOrName).PUT
-  def urlGet(roomIdOrName: String) = url(roomIdOrName).GET
-  def urlDelete(roomIdOrName: String) = url(roomIdOrName).DELETE
 }
