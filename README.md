@@ -1,11 +1,13 @@
 hipchat-scala
 =============
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.imadethatcow/hipchat-scala_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.imadethatcow/hipchat-scala_2.11)
+
 Scala interface for the HipChat v2 API
 
 Importing with sbt:
 ```
-libraryDependencies += "com.imadethatcow" %% "hipchat-scala" % "1.1"
+libraryDependencies += "com.imadethatcow" %% "hipchat-scala" % "<VERSION>" // version 1.2 is the latest as of July 2017
 ```
 
 Please check [https://www.hipchat.com/docs/apiv2] to get a better sense for available capabilities.
