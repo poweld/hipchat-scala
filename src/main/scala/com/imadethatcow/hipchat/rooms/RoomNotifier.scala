@@ -1,11 +1,11 @@
 package com.imadethatcow.hipchat.rooms
 
-import com.imadethatcow.hipchat.common.{Logging, Common}
-import Common._
+import com.imadethatcow.hipchat.common.Common._
+import com.imadethatcow.hipchat.common.Logging
 import com.imadethatcow.hipchat.common.caseclass.RoomNotification
-import com.imadethatcow.hipchat.common.enums.{MessageFormat, Color}
+import com.imadethatcow.hipchat.common.enums.{Color, MessageFormat}
+
 import scala.concurrent.{ExecutionContext, Future}
-import dispatch._
 
 class RoomNotifier(private[this] val apiToken: String, private[this] val baseUrlOpt: Option[String] = None)(implicit executor: ExecutionContext) extends Logging {
 
