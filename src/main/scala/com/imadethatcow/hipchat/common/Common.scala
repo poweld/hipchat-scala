@@ -3,9 +3,9 @@ package com.imadethatcow.hipchat.common
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala._
-import com.ning.http.client.Response
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.ConfigFactory
 import dispatch._
+import org.asynchttpclient.Response
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.ExecutionContext
@@ -18,12 +18,11 @@ object Common extends Logging with Config {
     .registerModule(DefaultScalaModule)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
   val writeMapper: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
-  val http: Http = Http.configure(_ setFollowRedirect true)
+  val http: Http = Http.withConfiguration(_.setFollowRedirect(true))
   val apiUrl: Req = url(config.getString("api-url"))
   val defaultResponseCode: Int = 200
 
   sys.ShutdownHookThread {
-    Http.shutdown()
     http.shutdown()
     log.info("HTTP client shutdown")
   }

@@ -50,32 +50,31 @@ name := "hipchat-scala"
 
 version := "1.2"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.12.3"
 
 crossScalaVersions := Seq(
-  "2.11.2",
-  "2.10.4"
+  "2.12.3",
+  "2.11.2"
 )
 
 scalacOptions ++= Seq(
   "-encoding", "UTF-8", "-deprecation", "-unchecked", "-feature", //"-optimise",
   "-Xmigration", "-Xfuture", //"–Xverify", "-Xcheck-null", "-Ystatistics",
-  "-Yinline-warnings", //"-Yinline",
-  "-Ywarn-dead-code", "-Ydead-code"
+  "-Ywarn-dead-code"
 )
 
 javacOptions ++= Seq("-encoding", "UTF-8", "-source", "1.7", "-target", "1.7", "-Xlint:unchecked", "-Xlint:deprecation")
 
 libraryDependencies ++= Seq(
   "ch.qos.logback"                % "logback-classic"       % "1.1.2",
-  "com.fasterxml.jackson.core"    % "jackson-core"          % "2.4.2",
-  "com.fasterxml.jackson.module"  %% "jackson-module-scala" % "2.4.2",
-  "net.databinder.dispatch"       %% "dispatch-core"        % "0.11.3",
-  "com.typesafe.akka"             %% "akka-actor"           % "2.3.6",
+  "com.fasterxml.jackson.core"    % "jackson-core"          % "2.8.4",
+  "com.fasterxml.jackson.module"  %% "jackson-module-scala" % "2.8.4",
+  "net.databinder.dispatch"       %% "dispatch-core"        % "0.13.1",
+  "com.typesafe.akka"             %% "akka-actor"           % "2.5.4",
   "joda-time"                     % "joda-time"             % "2.4",
   "org.joda"                      % "joda-convert"          % "1.7",
-  "com.typesafe"                  % "config"                % "1.2.1",
-  "org.scalatest"                 %% "scalatest"            % "2.2.2"     % "test"
+  "com.typesafe"                  % "config"                % "1.3.1",
+  "org.scalatest"                 %% "scalatest"            % "3.0.4"     % "test"
 )
 
 mappings in(Compile, packageBin) ~= {
